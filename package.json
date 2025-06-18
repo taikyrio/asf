@@ -1,0 +1,25 @@
+
+{
+  "name": "quicklife-simulator",
+  "version": "1.0.0",
+  "description": "A modern life simulation game",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "echo 'Static files ready for deployment'"
+  },
+  "keywords": ["game", "life-simulator", "web-game"],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

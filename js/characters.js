@@ -223,7 +223,7 @@ const arrest = (min, max, person) => {
 
     leftBtnContainer.innerHTML = `
                 <button class="btn" onclick="windows.prison.display()">
-                <img src="images/prison.png">
+                🔒
                 </button>
                 <p>Prison</p>
                 `

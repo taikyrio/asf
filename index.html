@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- please dont look at the css file lol -->
     <link rel="stylesheet" href="styles.css">
-    <title>Quicklife</title>
+    <title>QuickLife - Modern Life Simulator</title>
+    <meta name="description" content="A modern life simulation game where you can live, work, and make choices that shape your virtual life.">
 </head>
 <body>
 
@@ -30,21 +33,9 @@
         
     </div>
     <nav id="navbar">
-        <div style="display: flex; align-items: center; width: 100%; justify-content: space-between; padding: 0 20px;">
-            <div style="display: flex; gap: 10px;">
-                <button onclick="SaveSystem.saveGame(); EnhancedUI.showNotification('Game saved!', 'success')" class="nav-btn" title="Save Game (Ctrl+S)">💾</button>
-                <button onclick="loadSavedGame()" class="nav-btn" title="Load Game (Ctrl+L)">📁</button>
-                <button onclick="showAchievements()" class="nav-btn" title="View Achievements">🏆</button>
-            </div>
-            
-            <div id="money-container" onclick="windows.playerData.moneyDashboard()" title="Display flow of money">
-                <p id="total-money">0 $</p>
-                <p id="balance"></p>
-            </div>
-            
-            <div style="color: #bece63; font-size: 12px;">
-                Press SPACE to age
-            </div>
+        <div id="money-container" onclick="windows.playerData.moneyDashboard()" title="Display flow of money">
+            <p id="total-money">0 $</p>
+            <p id="balance"></p>
         </div>
     </nav>
     <main>
@@ -70,20 +61,20 @@
                     
                 </div>
                 <div class="button-container" id="relationship-container">
-                    <button onclick="menu.relationships()" class="btn" id="relation-button"><img src="images/relations.png" alt="relations"></button>
+                    <button onclick="menu.relationships()" class="btn" id="relation-button">❤️</button>
                     <p>Relationships</p>
                 </div>
                 <div class="button-container" id="profile-container">
-                    <button onclick="menu.profile()" class="btn"><img src="images/options/identity.png" alt="profile"></button>
+                    <button onclick="menu.profile()" class="btn">👤</button>
                     <p>Profile</p>
                 </div>
             </div>
 
             <div class="row">
                 <div class="button-container" id="job-btn-container">
-                    <button onclick="menu.job()" class="btn"><img src="images/job.png" alt="career"></button>
+                    <button onclick="menu.job()" class="btn">💼</button>
                     <p>Career</p>
-                </div>
+                </div></div>
                 <div class="button-container" id="age-btn-container">
                     <button id="age-btn" onclick="annualChanges()">Age</button>
                 </div>
@@ -121,43 +112,6 @@
         <script src="js/main.js"></script>
         <script src="js/characters.js"></script>
         <script src="js/menu.js"></script>
-        <script src="js/saveSystem.js"></script>
-        <script src="js/achievements.js"></script>
-        <script src="js/timeEvents.js"></script>
-        <script src="js/minigames.js"></script>
-        <script src="js/enhancedUI.js"></script>
         <script src="js/interface.js"></script>
-        
-        <script>
-            // Initialize the game once all scripts are loaded
-            document.addEventListener('DOMContentLoaded', function() {
-                try {
-                    // Initialize enhanced UI features
-                    if (typeof interfaceEnhancements === 'function') {
-                        interfaceEnhancements();
-                    }
-                    
-                    // Add error handling for missing functions
-                    window.addEventListener('error', function(e) {
-                        console.error('Game error:', e.error);
-                    });
-                    
-                    // Ensure all UI elements are properly initialized
-                    setTimeout(() => {
-                        if (typeof EnhancedUI !== 'undefined' && EnhancedUI.init) {
-                            EnhancedUI.init();
-                        }
-                    }, 100);
-                } catch (error) {
-                    console.error('Error initializing game:', error);
-                }
-            });
-            
-            // Global error handler for unhandled promise rejections
-            window.addEventListener('unhandledrejection', function(e) {
-                console.error('Unhandled promise rejection:', e.reason);
-                e.preventDefault();
-            });
-        </script>
     </body>
 </html>

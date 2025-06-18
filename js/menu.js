@@ -14,38 +14,37 @@ const menu = {
         menuBody.innerHTML = `
         <ul>
             <li onclick="menu.freetime()" class="option activity-option">
-                <img src="images/options/free-time.png" alt="free-time" on> Free time
+                <span class="emoji-icon">🎮</span> Free time
             </li>
             <li onclick="menu.cars()" class="option activity-option ${player.age < 18 ? 'disabled' : ''}">
-                <img src="images/options/cars.png" alt="car"> Cars
+                <span class="emoji-icon">🚗</span> Cars
             </li>
             <li onclick="menu.realEstate()" class="option activity-option ${player.age < 16 ? 'disabled' : ''}">
-                <img src="images/options/real-estate.png" alt="house"> Real Estate
+                <span class="emoji-icon">🏠</span> Real Estate
             </li>
             <li onclick="menu.shopping()" class="option activity-option ${player.age < 14 ? 'disabled' : ''}">
-                <img src="images/options/shopping.png" alt="shopping"> Shopping
+                <span class="emoji-icon">🛒</span> Shopping
             </li>
             <li onclick="menu.emigrate()" class="option activity-option ${player.age < 18 ? 'disabled' : ''}">
-                <img src="images/options/emigrate.png" alt="emigrate globe earth"> Emigrate
+                <span class="emoji-icon">🌍</span> Emigrate
             </li>
             <li onclick="windows.driverLicense.display()" class="option activity-option ${player.age < 18 ? 'disabled' : ''}">
-                <img src="images/options/drivelicense.png">Driver license
+                <span class="emoji-icon">🚗</span> Driver license
             </li>
             <li onclick="windows.love.findLove()" class="option activity-option ${player.age < 14 ? 'disabled' : ''}">
-                <img src="images/options/love.png" style="width: 35px; height: 35px"> Love
+                <span class="emoji-icon">💕</span> Love
             </li>
             <li onclick="windows.plasticSurgeries.display()" class="option activity-option ${player.age < 18 ? 'disabled' : ''}">
-                <img src="images/options/plasticSurgery.png"> Plastic surgeries
+                <span class="emoji-icon">💄</span> Plastic surgeries
             </li>
             <li onclick="windows.university.display()" class="option activity-option ${player.age < 18 ? 'disabled' : ''}">
-                <img src="images/options/university.png
-                ">University
+                <span class="emoji-icon">🎓</span> University
             </li>
             <li class="option activity-option ${player.age < 14 ? 'disabled' : ''}" onclick="menu.criminal()">
-                <img src="images/options/criminal.png"> Criminal
+                <span class="emoji-icon">🔫</span> Criminal
             </li>
             <li class="option activity-option ${player.age < 5 ? 'disabled' : ''}" onclick="windows.suicide.display()">
-                Suicide
+                <span class="emoji-icon">☠️</span> Suicide
             </li>
         </ul>
         `
@@ -370,28 +369,28 @@ const menu = {
         menuBody.innerHTML = `
         <ul>
             <li class="option" onclick="windows.playerData.identity()">
-                <img src="images/options/identity.png" alt="identity"> Identity
+                <span class="emoji-icon">🆔</span> Identity
             </li>
             <li class="option" onclick="windows.playerData.skills()">
-                <img src="images/options/skills.png" id="skills-icon" alt="skills"> Skills
+                <span class="emoji-icon">⭐</span> Skills
             </li>
             <li class="option" onclick="menu.inventory()">
-                <img src="images/options/inventory.png" alt="inventory">Inventory
+                <span class="emoji-icon">🎒</span> Inventory
             </li>
             <li class="option" onclick="windows.playerData.education()">
-                <img src="images/options/education.png" alt="education"> Education
+                <span class="emoji-icon">📚</span> Education
             </li>
             <li class="option" onclick="windows.playerData.cv()">
-                <img src="images/options/cv.png" alt="curriculum">Curriculum Vitae
+                <span class="emoji-icon">📄</span> Curriculum Vitae
             </li>
             <li class="option ${player.age < 15 ? 'disabled' : ''}" id="sexuality" onclick="windows.sexuality.display()">
-                <img src="images/options/sexuality.png" alt="sexuality"> Sexuality
+                <span class="emoji-icon">🏳️‍🌈</span> Sexuality
             </li>
             <li class="option" onclick="alert('not implemented yet')">
-                <img src="images/options/health.png" alt="health"> Health
+                <span class="emoji-icon">❤️‍🩹</span> Health
             </li>
             <li class="option" onclick="windows.playerData.criminalRecord()">
-                <img src="images/options/criminal-record.png" alt="criminal-record"> Criminal record
+                <span class="emoji-icon">🚨</span> Criminal record
             </li>
         </ul>
         `
