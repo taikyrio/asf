@@ -201,10 +201,13 @@ const interfaceLoading = () => {
         bar.style.transition = 'all ease 0.3s'
     }
     
-    // Update career button state
+    // Update career button state and initialize menu options
     setTimeout(() => {
         if (typeof updateCareerButtonState === 'function') {
             updateCareerButtonState();
+        }
+        if (typeof initializeMenuOptions === 'function') {
+            initializeMenuOptions();
         }
     }, 100);
 }

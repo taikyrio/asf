@@ -6,7 +6,7 @@ let menuTitle = document.getElementById('menu-title');
 let eventContainer = document.getElementById('event-container')
 
 const randomStat = (min, max) => {
-    return min + Math.floor(Math.random() * max);
+    return min + Math.floor(Math.random() * (max - min + 1));
 }
 
 const genderRandomizer = () => {
@@ -82,36 +82,33 @@ const nationalityList = () => {
     return string;
 }
 
-//displays items including houses and cars
-const itemListifier = (obj, property, objName) => {
-    let string = '';
-    let index = 0;
-    let collection = obj[property]
-    if(objName === 'items')
-        for(let element of obj[property]) {
-            string = string.concat(`<li onclick="windows.items.buyWindow(this)" id="${property}-${index}" data-objName="${objName}" data-property="${property}" data-index="${index}" class="option">${element.label} (${moneyFormat(element.price)} $)</li>`)
-            index++;
+// Function to randomize house statistics annually
+const randomizeHouseStats = () => {
+    if (!player.inventory.houses || player.inventory.houses.length === 0) return;
+
+    for (let house of player.inventory.houses) {
+        // Random condition changes
+        const conditionChange = Math.floor(Math.random() * 11) - 5; // -5 to +5
+        house.condition = Math.max(0, Math.min(100, (house.condition || 75) + conditionChange));
+
+        // Age the house
+        house.age = (house.age || 0) + 1;
+
+        // Adjust price based on condition and age
+        const basePrice = house.originalPrice || house.price;
+        const conditionMultiplier = house.condition / 100;
+        const ageDepreciation = Math.max(0.5, 1 - (house.age * 0.01));
+        house.price = Math.floor(basePrice * conditionMultiplier * ageDepreciation);
+
+        // Store original price if not already stored
+        if (!house.originalPrice) {
+            house.originalPrice = basePrice;
         }
-    else if(objName === 'assets'){
-        for(let element of collection.sort((a, b) => b.price - a.price)) {
-            string = string.concat(`<div onclick="windows.items.buyWindow(this)" 
-            id="${property}-${index}" data-objName="${objName}" data-property="${property}" data-index="${index}" class="cell">${element.label} (${moneyFormat(element.price)} $)</div>`)
-            index++;
-        }
-        return string
     }
-    return string
-}
+};
 
-const ownedAssets = (type) =>{
-    let string = '';
-    for(let asset of player.inventory[type]){
-        string = string.concat(`<div onclick="windows.items.ownedAssetWindow(this)" data-type="${type}" data-index="${asset.inventoryIndex}" class="cell">
-        ${asset.label}
-        </div>`)
-    } return string
-
-}
+//displays items including houses and cars
+// itemListifier and ownedAssets functions are defined in menu.js
 
 const capitalize = (word) =>{
     let newWord = []
@@ -294,10 +291,10 @@ const requirementsFiller = (obj, person) =>{
     for(let req of Object.entries(requirements)){
         if(statsList.includes(req[0]))
             person.skills[req[0]].level = req[1]
-        
+
         if(req[0] === 'education')
             person.career[req[1]] = universityCareers[req[1]]
-        
+
         if(req[0] === 'driverLicense')
             person.driverLicense = true
     }
@@ -321,7 +318,7 @@ const numAbbreviation = (money) => {
 const moneyViewer = () => {
     const totalMoney = document.getElementById('total-money');
     totalMoney.innerText = `${moneyFormat(player.money.total)} $`;
-    
+
     const balance = document.getElementById('balance');
     if(player.money.income - player.money.expenses > 0)
         balance.innerHTML = `<span class="green">+${numAbbreviation(player.money.income - player.money.expenses)} $</span>`
@@ -399,7 +396,7 @@ const createStoryEvent = ({title, body}) => {
 const modifyStoryEvent = ({title, body, id}) => {
     const eventTitle = document.getElementById(`event-${id}-title`)
     const eventBody = document.getElementById(`event-${id}-body`)
-    
+
     eventTitle.innerText = title
     eventBody.innerHTML = body(id)
 }
@@ -418,3 +415,16 @@ const barColor = (percentage) => {
 const scrolldown = (element) => {
     element.scrollTop = element.scrollHeight;
 }
+
+const ownedAssets = (type) => {
+    if (!player.inventory[type] || player.inventory[type].length === 0) {
+        return '<p>You don\'t own any ' + type + '</p>';
+    }
+
+    return player.inventory[type].map((asset, index) => `
+        <li class="option" data-type="${type}" data-index="${index}" onclick="windows.items.ownedAssetWindow(this)">
+            ${asset.label} - ${moneyFormat(asset.price)}$
+        </li>
+    `).join('');
+};
+

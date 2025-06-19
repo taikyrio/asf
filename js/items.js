@@ -154,15 +154,7 @@ const items = {
     ]
 };
 
-const itemListifier = (itemsObj, category, type) => {
-    if (!itemsObj || !itemsObj[category]) return '';
-    
-    return itemsObj[category].map((item, index) => {
-        return `<li class="option" data-objname="${type}" data-property="${category}" data-index="${index}" onclick="windows.items.buyWindow(this)">
-            ${item.label} - ${moneyFormat(item.price)}$
-        </li>`;
-    }).join('');
-};
+// This file is intentionally empty - item functions are handled in menu.js
 
 const ownedAssets = (type) => {
     if (!player.inventory[type] || player.inventory[type].length === 0) {
