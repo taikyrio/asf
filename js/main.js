@@ -10,10 +10,12 @@ class Person {
         this.name = name || nameRandomizer(this.language, this.gender);
         this.surname = surname || surnameRandomizer(this.language);
         this.age = age || 0;
-        this.money.total = money ? money : 0;
         this.location = location || birthplaceQuery(this.nationality)
         this.birthplace = this.location
         this.driverLicense = this.age > 18 ? true : false;
+
+        // Initialize money total after money object is defined
+        if (money) this.money.total = money;
     }
 
     inventory = { weapons: [], instruments: [], electronics: [], houses: [], cars: []};
@@ -189,18 +191,18 @@ const interfaceLoading = () => {
     moneyViewer()
     jobAssigner(characters)
     firstMessage()
-    
+
     // Hide all menu screens
     document.getElementById('splash-screen').style.display = 'none'
     document.getElementById('main-menu-screen').style.display = 'none'
     document.getElementById('create-character-screen').style.display = 'none'
-    
+
     const bars = document.getElementsByClassName('bar-progress');
     for (let bar of bars) {
         bar.style.animationName = 'animation-bar';
         bar.style.transition = 'all ease 0.3s'
     }
-    
+
     // Update career button state and initialize menu options
     setTimeout(() => {
         if (typeof updateCareerButtonState === 'function') {

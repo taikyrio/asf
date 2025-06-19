@@ -191,7 +191,24 @@ const obligatoryEvents = {
     }
 }
 
-const eventsHandler = () => {
+window.pregnancyHandler = () => {
+    // Handle pregnancy events
+    if (player.gender === 'female' && player.age >= 16 && player.relationships.partner) {
+        const random = Math.floor(Math.random() * 100);
+        if (random < 5) { // 5% chance
+            showEvent({
+                title: "Pregnancy",
+                body: `
+                <p>You might be pregnant! What do you want to do?</p>
+                <div class="option" onclick="closeEvent()">Take a test</div>
+                <div class="option" onclick="closeEvent()">Ignore it</div>
+                `,
+            });
+        }
+    }
+};
+
+window.eventsHandler = () => {
     if (!player.alive || player.age < 4) return
 
     const displayHandler = (events, probability) => {

@@ -416,15 +416,5 @@ const scrolldown = (element) => {
     element.scrollTop = element.scrollHeight;
 }
 
-const ownedAssets = (type) => {
-    if (!player.inventory[type] || player.inventory[type].length === 0) {
-        return '<p>You don\'t own any ' + type + '</p>';
-    }
 
-    return player.inventory[type].map((asset, index) => `
-        <li class="option" data-type="${type}" data-index="${index}" onclick="windows.items.ownedAssetWindow(this)">
-            ${asset.label} - ${moneyFormat(asset.price)}$
-        </li>
-    `).join('');
-};
 

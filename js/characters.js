@@ -1,26 +1,62 @@
 //here I handle every stat change in the characters
 
+// Character System Constants
+const EDUCATION_STAGES = {
+    NONE: 'none',
+    PRESCHOOL: 'preschool',
+    ELEMENTARY: 'elementary',
+    HIGHSCHOOL: 'highschool',
+    UNIVERSITY: 'university'
+};
+
+const EDUCATION_AGE_RANGES = {
+    [EDUCATION_STAGES.PRESCHOOL]: { start: 3, end: 5 },
+    [EDUCATION_STAGES.ELEMENTARY]: { start: 6, end: 11 },
+    [EDUCATION_STAGES.HIGHSCHOOL]: { start: 12, end: 17 },
+    [EDUCATION_STAGES.UNIVERSITY]: { start: 18, end: null }
+};
+
+// Education handling
 const studyingProcess = (textbox) => {
-    let currentEducation = player.currentEducation;
-    let currentCareer = player.currentCareer
-    let yearsStudied;
-    let duration;
+    if (!player || !textbox) return;
 
-    if(currentCareer) {
-        duration = currentCareer.duration;
-        yearsStudied = currentCareer.yearsStudied;
-    }
+    try {
+        const currentEducation = player.currentEducation;
+        const currentCareer = player.currentCareer;
+        
+        if (!currentCareer || !currentEducation || currentEducation !== EDUCATION_STAGES.UNIVERSITY) {
+            return;
+        }
 
-    if(currentCareer && currentEducation === 'university' && yearsStudied !== duration){
-        player.currentCareer.yearsStudied++;
-    } else if(currentCareer && currentEducation === 'university' && yearsStudied === duration){
-        player.career[player.currentCareer.label] = player.currentCareer;
-        if(player.currentCareer.paidBy === 'myself') player.money.expenses -= 6000
-        player.currentCareer = {studying: false};
-        player.currentEducation = 'none';
-        textbox.innerHTML += `<p>I finished my career</p>`
+        const duration = currentCareer.duration;
+        const yearsStudied = currentCareer.yearsStudied;
+
+        if (yearsStudied !== duration) {
+            player.currentCareer.yearsStudied++;
+        } else {
+            // Graduation
+            player.career[player.currentCareer.label] = player.currentCareer;
+            
+            // Handle tuition expenses
+            if (player.currentCareer.paidBy === 'myself') {
+                player.money.expenses -= 6000;
+            }
+            
+            // Reset education status
+            player.currentCareer = { studying: false };
+            player.currentEducation = EDUCATION_STAGES.NONE;
+            
+            // Notify player
+            textbox.innerHTML += `<p>I finished my ${player.currentCareer.label} degree!</p>`;
+            
+            if (typeof EnhancedUI !== 'undefined') {
+                EnhancedUI.showNotification('Graduated from University!', 'success');
+            }
+        }
+    } catch (error) {
+        console.error('Error in studying process:', error);
     }
-}
+};
 
 const statsLimit = (person) => {
     let stats = person.stats;
@@ -74,46 +110,75 @@ const statsBuffer = () => {
     
 }
 
+// Life stage events
 const specificEvents = () => {
-    switch (player.age) {
-        case 1:
-            obligatoryEvents.firstWords.display()
-            break;
-        case 3:
-            player.currentEducation = 'preschool'
-            textContainer.innerHTML += `<p>I started prescholar</p>`
-            break;
+    if (!player) return;
 
-        case 6:
-            player.currentEducation = 'elementary'
-            textContainer.innerHTML += `<p>I started elementary school</p>`
-            break;
+    try {
+        switch (player.age) {
+            case 1:
+                if (typeof obligatoryEvents?.firstWords?.display === 'function') {
+                    obligatoryEvents.firstWords.display();
+                }
+                break;
 
-        case 12:
-            player.currentEducation = 'highschool'
-            textContainer.innerHTML += `<p>I started highschool</p>`
-            break;
+            case EDUCATION_AGE_RANGES[EDUCATION_STAGES.PRESCHOOL].start:
+                player.currentEducation = EDUCATION_STAGES.PRESCHOOL;
+                textContainer.innerHTML += `<p>I started preschool</p>`;
+                break;
 
-        case 18:
-            player.career['education'] = {name: 'Highschool'}
-            windows.university.display()
-    }
-}
+            case EDUCATION_AGE_RANGES[EDUCATION_STAGES.ELEMENTARY].start:
+                player.currentEducation = EDUCATION_STAGES.ELEMENTARY;
+                textContainer.innerHTML += `<p>I started elementary school</p>`;
+                break;
 
-const careerPreviewer = () => {
-    let string = '';
-    let object = {education: '<li>No education received yet</li>', degrees: '<p>No degrees yet</p>'}
-    for(let obj of Object.entries(player.career)){
-        if(obj[0] !== 'education'){
-            string = string.concat(`<li>${obj[1].name}</li>`)
+            case EDUCATION_AGE_RANGES[EDUCATION_STAGES.HIGHSCHOOL].start:
+                player.currentEducation = EDUCATION_STAGES.HIGHSCHOOL;
+                textContainer.innerHTML += `<p>I started high school</p>`;
+                break;
+
+            case EDUCATION_AGE_RANGES[EDUCATION_STAGES.UNIVERSITY].start:
+                player.career['education'] = { name: 'High School' };
+                if (typeof windows?.education?.university?.display === 'function') {
+                    windows.education.university.display();
+                }
+                break;
         }
-        else object.education = 'Highschool'
-    } 
-    if(string !== '')
-    object.degrees = string;
-    return object
+    } catch (error) {
+        console.error('Error in specific events:', error);
+    }
+};
 
-}
+// Career history management
+const careerPreviewer = () => {
+    if (!player) return { education: '<li>No education received yet</li>', degrees: '<p>No degrees yet</p>' };
+
+    try {
+        let degrees = '';
+        const result = {
+            education: '<li>No education received yet</li>',
+            degrees: '<p>No degrees yet</p>'
+        };
+
+        // Process career entries
+        for (const [key, value] of Object.entries(player.career)) {
+            if (key === 'education') {
+                result.education = 'High School';
+            } else if (value?.name) {
+                degrees += `<li>${value.name}</li>`;
+            }
+        }
+
+        if (degrees) {
+            result.degrees = degrees;
+        }
+
+        return result;
+    } catch (error) {
+        console.error('Error in career previewer:', error);
+        return { education: '<li>Error loading education</li>', degrees: '<p>Error loading degrees</p>' };
+    }
+};
 
 const skillLeveler = () => {
     const levelChanger = (skill, newXpNeeded) =>{
@@ -152,7 +217,7 @@ const skillLeveler = () => {
     } 
 }
 
- const randomDeath = (person) => {
+ window.randomDeath = (person) => {
     const randomNum = Math.floor(Math.random() * person.age)
     const deathCause = [`has died while ${person.gender == 'male' ? 'he' : 'she'} was sleeping`]
     const randomReason = deathCause[Math.floor(Math.random() * deathCause.length)]
@@ -196,27 +261,65 @@ const skillLeveler = () => {
     }
  }
 
- const jobPerformanceHandler = () => {
-    if(player.job === 'none') return 
+// Job performance management
+const jobPerformanceHandler = () => {
+    if (!player || player.job === 'none') return;
 
-    const performance = player.job.performance
-    const random = Math.round(Math.random() * 10)
-    if(performance <= 10 && random === 2){
-        player.job.until = year
-        player.cv.push(player.job)
-        player.job = 'none'
-    } else if(performance >= 75 && random === 5){
-        
+    try {
+        const performance = player.job.performance;
+        const random = Math.round(Math.random() * 10);
+
+        // Handle poor performance
+        if (performance <= 10 && random === 2) {
+            // Add to CV before termination
+            player.cv.push({
+                ...player.job,
+                until: year
+            });
+            
+            // Terminate employment
+            player.job = 'none';
+            
+            if (typeof EnhancedUI !== 'undefined') {
+                EnhancedUI.showNotification('You were fired due to poor performance!', 'error');
+            }
+        }
+        // Handle exceptional performance (promotion logic moved to CareerSystem)
+        else if (performance >= 75 && random === 5) {
+            if (typeof CareerSystem !== 'undefined') {
+                CareerSystem.handleCareerProgression(player);
+            }
+        }
+    } catch (error) {
+        console.error('Error in job performance handler:', error);
     }
- }
+};
 
- const resetAvaibleActions = () => {
-    for(let action of Object.entries(player.actions)){
-        player.actions[action[0]] = 0
+// Action reset
+const resetAvailableActions = () => {
+    if (!player || !player.actions) return;
+
+    try {
+        for (const action of Object.keys(player.actions)) {
+            player.actions[action] = 0;
+        }
+    } catch (error) {
+        console.error('Error resetting available actions:', error);
     }
- }
+};
 
-const arrest = (min, max, person) => {
+// Export character system
+const CharacterSystem = {
+    EDUCATION_STAGES,
+    EDUCATION_AGE_RANGES,
+    studyingProcess,
+    specificEvents,
+    careerPreviewer,
+    jobPerformanceHandler,
+    resetAvailableActions
+};
+
+window.arrest = (min, max, person) => {
     person.prison.sentenceTime = min + Math.floor(Math.random() * max)
     person.prison.yearsLeft = person.prison.sentenceTime
     person.prison.jailed = true;
@@ -233,11 +336,11 @@ const arrest = (min, max, person) => {
     }
 }
 
- const arrestByMurder = (person) => {
+ window.arrestByMurder = (person) => {
     arrest(8, 17, person)
 }
 
-const arrestByStealingCar = (person) => {
+window.arrestByStealingCar = (person) => {
     arrest(1, 3, person)
 }
 

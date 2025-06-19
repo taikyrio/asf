@@ -1,48 +1,123 @@
-
 class EnhancedUI {
-    static showNotification(message, type = 'info', duration = 3000) {
+    constructor() {
+        this.notificationQueue = [];
+        this.isProcessingQueue = false;
+        this.boundKeyHandler = this.handleKeyPress.bind(this);
+        this.initialize();
+    }
+
+    initialize() {
+        document.addEventListener('keydown', this.boundKeyHandler);
+        window.addEventListener('beforeunload', () => this.cleanup());
+    }
+
+    cleanup() {
+        document.removeEventListener('keydown', this.boundKeyHandler);
+        this.notificationQueue = [];
+        this.isProcessingQueue = false;
+    }
+
+    handleKeyPress(e) {
+        // Ignore if user is typing in an input
+        if (e.target.matches('input, textarea, select')) return;
+
+        if (e.ctrlKey || e.metaKey) {
+            switch(e.key.toLowerCase()) {
+                case 's':
+                    e.preventDefault();
+                    this.handleSave();
+                    break;
+                case 'l':
+                    e.preventDefault();
+                    this.handleLoad();
+                    break;
+                case 'n':
+                    e.preventDefault();
+                    this.handleNewGame();
+                    break;
+            }
+        }
+
+        // Space to age
+        if (e.code === 'Space') {
+            e.preventDefault();
+            const ageBtn = document.getElementById('age-btn');
+            if (ageBtn && ageBtn.style.display !== 'none') {
+                if (typeof annualChanges === 'function') {
+                    annualChanges();
+                }
+            }
+        }
+
+        // Escape to close modals
+        if (e.key === 'Escape') {
+            this.closeAllModals();
+        }
+    }
+
+    handleSave() {
+        if (typeof SaveSystem !== 'undefined' && SaveSystem.saveGame) {
+            SaveSystem.saveGame();
+        }
+    }
+
+    handleLoad() {
+        if (typeof SaveSystem !== 'undefined' && SaveSystem.loadGame) {
+            SaveSystem.loadGame();
+        }
+    }
+
+    handleNewGame() {
+        if (typeof showCharacterCreation === 'function') {
+            showCharacterCreation();
+        }
+    }
+
+    closeAllModals() {
+        const modal = document.getElementById('modal-background');
+        const menu = document.getElementById('menu-template');
+        
+        if (modal && modal.style.display === 'flex') {
+            modal.style.display = 'none';
+        }
+        if (menu && menu.style.display === 'block') {
+            menu.style.display = 'none';
+        }
+    }
+
+    static showNotification(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
-        notification.innerHTML = message;
-        notification.style.cssText = `
-            position: fixed;
-            top: 70px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            z-index: 1000;
-            animation: slideIn 0.3s ease;
-            max-width: 300px;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-message">${message}</span>
+            </div>
         `;
-        
-        switch (type) {
-            case 'success':
-                notification.style.backgroundColor = '#4CAF50';
-                break;
-            case 'error':
-                notification.style.backgroundColor = '#f44336';
-                break;
-            case 'warning':
-                notification.style.backgroundColor = '#ff9800';
-                break;
-            default:
-                notification.style.backgroundColor = '#2196F3';
-        }
-        
+
         document.body.appendChild(notification);
-        
+
+        // Trigger animation
         setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease';
+            notification.classList.add('show');
+        }, 10);
+
+        // Remove notification after delay
+        setTimeout(() => {
+            notification.classList.remove('show');
             setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
+                if (notification.parentElement) {
+                    notification.parentElement.removeChild(notification);
                 }
             }, 300);
-        }, duration);
+        }, 3000);
     }
-    
+
+    static hapticFeedback() {
+        if ('vibrate' in navigator) {
+            navigator.vibrate(50);
+        }
+    }
+
     static addProgressBar(containerId, value, maxValue, label) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -93,233 +168,14 @@ class EnhancedUI {
         element.setAttribute('title', text);
         element.style.cursor = 'help';
     }
-    
-    static addKeyboardShortcuts() {
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey || e.metaKey) {
-                switch (e.key) {
-                    case 's':
-                        e.preventDefault();
-                        SaveSystem.saveGame();
-                        this.showNotification('Game saved!', 'success');
-                        break;
-                    case 'l':
-                        e.preventDefault();
-                        if (SaveSystem.hasSavedGame()) {
-                            SaveSystem.loadGame();
-                            this.showNotification('Game loaded!', 'success');
-                        } else {
-                            this.showNotification('No saved game found!', 'error');
-                        }
-                        break;
-                }
-            }
-            
-            // Space bar to age
-            if (e.code === 'Space' && !e.target.matches('input, textarea')) {
-                e.preventDefault();
-                const ageBtn = document.getElementById('age-btn');
-                if (ageBtn && ageBtn.style.display !== 'none') {
-                    annualChanges();
-                }
-            }
-        });
-    }
 }
 
-const EnhancedUI = {
-    // Notification system
-    showNotification(message, type = 'info', duration = 3000) {
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
-        
-        document.body.appendChild(notification);
-        
-        // Auto remove after duration
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.style.animation = 'slideInRight 0.3s ease-out reverse';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 300);
-            }
-        }, duration);
-    },
-
-    // Add smooth animations to elements
-    animateElement(element, animationClass, duration = 1000) {
-        if (!element) return;
-        
-        element.classList.add(animationClass);
-        setTimeout(() => {
-            element.classList.remove(animationClass);
-        }, duration);
-    },
-
-    // Add keyboard shortcuts
-    addKeyboardShortcuts() {
-        document.addEventListener('keydown', (e) => {
-            // Ctrl+S to save
-            if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                if (typeof SaveSystem !== 'undefined' && SaveSystem.saveGame) {
-                    SaveSystem.saveGame();
-                    this.showNotification('Game saved successfully!', 'success');
-                }
-            }
-            
-            // Ctrl+L to load
-            if (e.ctrlKey && e.key === 'l') {
-                e.preventDefault();
-                if (typeof loadSavedGame === 'function') {
-                    loadSavedGame();
-                }
-            }
-            
-            // Space to age
-            if (e.code === 'Space' && !e.target.matches('input, textarea, select')) {
-                e.preventDefault();
-                if (typeof annualChanges === 'function') {
-                    annualChanges();
-                }
-            }
-            
-            // Escape to close modals
-            if (e.key === 'Escape') {
-                const modal = document.getElementById('modal-background');
-                const menu = document.getElementById('menu-template');
-                
-                if (modal && modal.style.display === 'flex') {
-                    modal.style.display = 'none';
-                }
-                if (menu && menu.style.display === 'block') {
-                    menu.style.display = 'none';
-                }
-            }
-        });
-    },
-
-    // Enhanced modal system
-    createModal(title, content, options = {}) {
-        const modal = document.getElementById('modal-background');
-        const container = document.getElementById('event-container');
-        const titleElement = document.getElementById('event-title');
-        const bodyElement = document.getElementById('event-body');
-        
-        if (!modal || !container || !titleElement || !bodyElement) return;
-        
-        titleElement.textContent = title;
-        bodyElement.innerHTML = content;
-        
-        // Add glassmorphism effect
-        container.style.backdropFilter = 'blur(20px)';
-        
-        modal.style.display = 'flex';
-        
-        // Add animation class
-        this.animateElement(container, 'fade-in');
-        
-        // Auto-close option
-        if (options.autoClose) {
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, options.autoClose);
-        }
-        
-        return modal;
-    },
-
-    // Update stat bars with smooth animations
-    updateStatBar(statName, value) {
-        const bar = document.getElementById(`${statName}-bar`);
-        if (!bar) return;
-        
-        const percentage = Math.max(0, Math.min(100, value));
-        
-        // Add smooth transition
-        bar.style.transition = 'width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-        bar.style.width = `${percentage}%`;
-        
-        // Update color based on value
-        if (percentage >= 70) {
-            bar.style.background = 'linear-gradient(90deg, #34C759, #30D158)';
-        } else if (percentage >= 40) {
-            bar.style.background = 'linear-gradient(90deg, #FF9500, #FFCC02)';
-        } else {
-            bar.style.background = 'linear-gradient(90deg, #FF3B30, #FF6961)';
-        }
-        
-        // Add pulse animation for low values
-        if (percentage < 20) {
-            bar.classList.add('pulse');
-        } else {
-            bar.classList.remove('pulse');
-        }
-    },
-
-    // Add haptic feedback simulation
-    hapticFeedback(type = 'light') {
-        if ('vibrate' in navigator) {
-            switch (type) {
-                case 'light':
-                    navigator.vibrate(10);
-                    break;
-                case 'medium':
-                    navigator.vibrate(20);
-                    break;
-                case 'heavy':
-                    navigator.vibrate(50);
-                    break;
-            }
-        }
-    },
-
-    // Initialize all UI enhancements
-    init() {
-        this.addKeyboardShortcuts();
-        
-        // Add loading animations to buttons
-        document.querySelectorAll('.btn, .option, .create-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                this.hapticFeedback('light');
-            });
-        });
-        
-        // Add smooth scrolling
-        document.documentElement.style.scrollBehavior = 'smooth';
-        
-        // Initialize intersection observer for animations
-        this.initScrollAnimations();
-    },
-
-    // Initialize scroll-triggered animations
-    initScrollAnimations() {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    this.animateElement(entry.target, 'slide-in-left');
-                }
-            });
-        }, observerOptions);
-        
-        // Observe stat containers and other elements
-        document.querySelectorAll('#stats-container, #tale-container, .relationship-container').forEach(el => {
-            observer.observe(el);
-        });
-    }
-};
+// Initialize UI enhancements
+const enhancedUI = new EnhancedUI();
 
 // Initialize enhanced UI when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    EnhancedUI.init();
+    enhancedUI.initialize();
 });
 
 // Export for global access

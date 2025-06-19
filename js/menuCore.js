@@ -1,4 +1,3 @@
-
 // Core menu functionality and navigation
 // Function to generate item lists
 const itemListifier = (itemsObj, category, type) => {
@@ -9,19 +8,6 @@ const itemListifier = (itemsObj, category, type) => {
             ${item.label} - ${moneyFormat(item.price)}$
         </li>`;
     }).join('');
-};
-
-// Initialize options after items and assets are loaded
-let weaponOptions, instrumentOptions, electronicOptions, housesOptions, carsOptions;
-
-const initializeMenuOptions = () => {
-    if (typeof items !== 'undefined' && typeof assets !== 'undefined') {
-        weaponOptions = itemListifier(items, "weapons", "items");
-        instrumentOptions = itemListifier(items, "instruments", "items");
-        electronicOptions = itemListifier(items, "electronics", "items");
-        housesOptions = itemListifier(assets, "houses", "assets");
-        carsOptions = itemListifier(assets, "cars", "assets");
-    }
 };
 
 // Main menu object - core navigation functions
@@ -77,5 +63,20 @@ const menu = {
                 else cellContainer.innerHTML = carsOptions;
             } else cellContainer.innerHTML = ownedAssets(type);
         }
+    }
+};
+
+
+
+// Initialize options after items and assets are loaded
+let weaponOptions, instrumentOptions, electronicOptions, housesOptions, carsOptions;
+
+const initializeMenuOptions = () => {
+    if (typeof items !== 'undefined' && typeof assets !== 'undefined') {
+        weaponOptions = itemListifier(items, "weapons", "items");
+        instrumentOptions = itemListifier(items, "instruments", "items");
+        electronicOptions = itemListifier(items, "electronics", "items");
+        housesOptions = itemListifier(assets, "houses", "assets");
+        carsOptions = itemListifier(assets, "cars", "assets");
     }
 };

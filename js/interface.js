@@ -173,72 +173,105 @@ const deathScreen = () => {
 }
 
 const annualChanges = () => {
-    year++;
-    for (let person of characters) {
-        if (person.alive) person.age++;
-        pregnancyHandler(person)
+    try {
+        const state = gameState.getState();
+        const updates = {
+            year: state.year + 1,
+            characters: state.characters.map(person => {
+                if (person.alive) {
+                    person.age++;
+                }
+                return person;
+            })
+        };
+
+        // Update game state
+        if (!gameState.setState(updates)) {
+            throw new Error('Failed to update game state');
+        }
+
+        const player = state.characters.find(char => char.characterIndex === state.player.characterIndex);
+        if (!player) {
+            throw new Error('Player character not found');
+        }
+
+        // Handle pregnancy for all characters
+        state.characters.forEach(person => {
+            if (person.alive) {
+                pregnancyHandler(person);
+            }
+        });
+
+        // Update text container
+        textContainer.innerHTML += `
+            <p><span class="yellow">${state.year} - ${player.age} years old</span></p>
+        `;
+
+        // Handle deaths
+        state.characters.forEach(person => {
+            randomDeath(person);
+        });
+
+        // Update UI elements
+        lifeStageDisplayer();
+        specificEvents();
+
+        // Random world events
+        if (Math.floor(Math.random() * 10) === 5) {
+            textContainer.innerHTML += `<p>${worldEventsMethodArr[Math.floor(Math.random() * worldEventsAmount)][1]()}</p>`;
+        }
+
+        // Update player's finances
+        player.money.total += player.money.income - player.money.expenses;
+
+        // Handle job performance
+        if (player.job !== 'none') {
+            const random = Math.round(Math.random());
+            if (random === 0) {
+                player.job.performance += Math.floor(Math.random() * 5);
+            } else {
+                player.job.performance -= Math.floor(Math.random() * 5);
+            }
+        }
+
+        // Handle music career
+        if (player.musicCareer && player.musicCareer.active) {
+            handleMusicCareerProgression();
+        }
+
+        // Handle education and careers
+        studyingProcess(textContainer);
+        if (player.job != 'none') player.job.buff(player);
+        if (player.currentCareer.studying) player.currentCareer.buff(player);
+
+        // Update stats
+        statsChanges();
+        statsBuffer();
+        statsLimit(player);
+        handleStatBars(player, true);
+        skillLeveler();
+
+        // Update UI
+        scrolldown(textContainer);
+        moneyViewer();
+        resetAvaibleActions();
+        randomizeHouseStats();
+        prisonHandler(player);
+        eventsHandler();
+        updateCareerButtonState();
+
+        // Save game after annual changes
+        if (typeof SaveSystem !== 'undefined') {
+            SaveSystem.saveGame();
+        }
+
+    } catch (error) {
+        console.error('Error in annual changes:', error);
+        if (typeof EnhancedUI !== 'undefined') {
+            EnhancedUI.showNotification('Error processing annual changes', 'error');
+        }
     }
-
-    textContainer.innerHTML += `
-    <p><span class="yellow">${year} - ${player.age} years old</span></p>
-    `
-
-    //death possibility
-    for (let person of characters) {
-        randomDeath(person)
-    }
-
-    // shows if player is in the stage of childhood, adulthood or elderhood
-    lifeStageDisplayer()
-
-    //this is for events such as first words and university
-    specificEvents()
-
-    //random messages
-    if (Math.floor(Math.random() * 10) === 5)
-        textContainer.innerHTML += `<p>${worldEventsMethodArr[Math.floor(Math.random() * worldEventsAmount)][1]()}</p>`
-
-    player.money.total += player.money.income - player.money.expenses
-
-    // job related stats
-    if (player.job !== 'none') {
-        const random = Math.round(Math.random())
-        if (random === 0)
-            player.job.performance += Math.floor(Math.random() * 5)
-        else
-            player.job.performance -= Math.floor(Math.random() * 5)
-    }
-
-    // Music career progression
-    if (player.musicCareer && player.musicCareer.active) {
-        handleMusicCareerProgression();
-    }
-
-    // for university
-    studyingProcess(textContainer)
-    if(player.job != 'none') player.job.buff(player)
-    if(player.currentCareer.studying) player.currentCareer.buff(player);
-    statsChanges()
-    statsBuffer()
-    statsLimit(player)
-    handleStatBars(player, true);
-    skillLeveler()
-
-    //scroll handling
-    scrolldown(textContainer)
-
-    //displaying flow of money
-    moneyViewer()
-
-    resetAvaibleActions()
-
-    randomizeHouseStats()
-    prisonHandler(player)
-    eventsHandler()
-    
-    // Update career button state after aging
-    updateCareerButtonState()
-}
+};
 
 const handleMusicCareerProgression = () => {
     // Check for records finishing production

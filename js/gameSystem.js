@@ -175,3 +175,80 @@ class GameSystem {
         return false;
     }
 }
+
+class GameStateManager {
+    constructor() {
+        this._state = {
+            player: null,
+            characters: [],
+            year: 0,
+            version: "1.0"
+        };
+        this._subscribers = new Set();
+    }
+
+    setState(updates) {
+        // Validate updates
+        if (!updates || typeof updates !== 'object') {
+            console.error('Invalid state update:', updates);
+            return false;
+        }
+
+        // Apply updates atomically
+        const newState = { ...this._state };
+        for (const [key, value] of Object.entries(updates)) {
+            if (key in this._state) {
+                newState[key] = value;
+            }
+        }
+
+        // Validate new state
+        if (this.validateState(newState)) {
+            this._state = newState;
+            // Notify subscribers
+            this._subscribers.forEach(callback => callback(this._state));
+            return true;
+        }
+        return false;
+    }
+
+    getState() {
+        return { ...this._state }; // Return immutable copy
+    }
+
+    subscribe(callback) {
+        if (typeof callback === 'function') {
+            this._subscribers.add(callback);
+            return () => this._subscribers.delete(callback); // Return unsubscribe function
+        }
+    }
+
+    validateState(state) {
+        // Basic validation
+        if (!state || typeof state !== 'object') return false;
+        if (!state.version || state.version !== this._state.version) return false;
+        if (!Array.isArray(state.characters)) return false;
+        
+        // Validate player
+        if (state.player) {
+            if (typeof state.player !== 'object') return false;
+            if (typeof state.player.age !== 'number') return false;
+            if (typeof state.player.alive !== 'boolean') return false;
+        }
+
+        return true;
+    }
+
+    reset() {
+        this._state = {
+            player: null,
+            characters: [],
+            year: 0,
+            version: this._state.version
+        };
+        this._subscribers.forEach(callback => callback(this._state));
+    }
+}
+
+// Initialize global state manager
+const gameState = new GameStateManager();

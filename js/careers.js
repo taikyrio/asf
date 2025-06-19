@@ -1,3 +1,9 @@
+// Career System Constants
+const MINIMUM_WORKING_AGE = 16;
+const PERFORMANCE_MIN = 0;
+const PERFORMANCE_MAX = 100;
+const SKILL_GAIN_BASE = 5;
+const SKILL_GAIN_RANDOM = 20;
 
 const childhoodEducation = {
     preschool: {
@@ -22,11 +28,21 @@ const universityCareers = {
     },
     computerScience: {
         label: 'computerScience',
-        name: 'Computer science',
+        name: 'Computer Science',
         duration: 4,
+        cost: 6000,
+        requirements: {
+            minAge: 18,
+            smartness: 60
+        },
         buff(player) {
-            player.stats.smartness += Math.floor(Math.random() * 5)
-            player.skills.programming.xp += 50 + Math.floor(Math.random() * 20)
+            if (!player) return;
+            try {
+                player.stats.smartness = Math.min(100, player.stats.smartness + Math.floor(Math.random() * 3));
+                player.skills.programming.xp += 75 + Math.floor(Math.random() * 25);
+            } catch (error) {
+                console.error('Error in computerScience buff:', error);
+            }
         }
     },
     biology: {
@@ -73,10 +89,20 @@ const universityCareers = {
         label: 'music',
         name: 'Music',
         duration: 4,
+        cost: 6000,
+        requirements: {
+            minAge: 18,
+            music: 50
+        },
         buff(player) {
-            player.stats.smartness += Math.floor(Math.random() * 3)
-            player.stats.music += Math.floor(Math.random() * 8) + 2
-            player.skills.music.xp += 75 + Math.floor(Math.random() * 25)
+            if (!player) return;
+            try {
+                player.stats.smartness = Math.min(100, player.stats.smartness + Math.floor(Math.random() * 3));
+                player.stats.music = Math.min(100, player.stats.music + Math.floor(Math.random() * 8) + 2);
+                player.skills.music.xp += 75 + Math.floor(Math.random() * 25);
+            } catch (error) {
+                console.error('Error in music buff:', error);
+            }
         }
     }
 }
@@ -90,10 +116,15 @@ const specialCareers = {
         description: 'Pursue a career in music. Success depends heavily on your Musical skill.',
         isSpecial: true,
         requirements: {
-            minAge: 10
+            minAge: 10,
+            music: 30
         },
-        // This is handled separately in the menu system
-        activation: 'musicianCareer'
+        activation: 'musicianCareer',
+        validate(player) {
+            return player && 
+                   player.age >= this.requirements.minAge &&
+                   player.stats.music >= this.requirements.music;
+        }
     }
 }
 
@@ -103,15 +134,21 @@ const jobs = [
         label: 'Jr App Developer',
         requirements: {
             education: 'computerScience',
-            programming: 3
+            programming: 3,
+            minAge: 18
         },
         salary: 55000,
         field: 'Technology',
         category: 'Corporate',
         icon: '💻',
         promotion: 'App Developer',
-        buff(player){
-            player.skills.programming.xp += 5 + Math.floor(Math.random() * 20);
+        buff(player) {
+            if (!player) return;
+            try {
+                player.skills.programming.xp += SKILL_GAIN_BASE + Math.floor(Math.random() * SKILL_GAIN_RANDOM);
+            } catch (error) {
+                console.error('Error in Jr App Developer buff:', error);
+            }
         }
     }, 
     {
@@ -528,28 +565,85 @@ const getJobsByCategory = () => {
     return categories;
 };
 
-// Function to check if player meets job requirements
+// Improved job requirement checking
 const meetsJobRequirements = (job, player) => {
-    // Check age requirement
-    if (job.requirements.minAge && player.age < job.requirements.minAge) return false;
+    if (!job || !player) return false;
     
-    // Check education requirement
-    if (job.requirements.education && !player.career[job.requirements.education]) return false;
-    
-    // Check criminal record
-    if (job.requirements.criminalRecord === 'clean') {
-        if (player.criminalRecord.murder > 0 || player.criminalRecord.murderAttempts > 0) return false;
-    }
-    
-    // Check driver license
-    if (job.requirements.driverLicense && !player.driverLicense) return false;
-    
-    // Check skill requirements
-    for (const [skill, level] of Object.entries(job.requirements)) {
-        if (skill !== 'minAge' && skill !== 'education' && skill !== 'criminalRecord' && skill !== 'driverLicense') {
-            if (player.stats[skill] < level) return false;
+    try {
+        // Check age requirement
+        if (job.requirements.minAge && player.age < job.requirements.minAge) return false;
+        
+        // Check education requirement
+        if (job.requirements.education && !player.career[job.requirements.education]) return false;
+        
+        // Check criminal record
+        if (job.requirements.criminalRecord === 'clean') {
+            if (player.criminalRecord?.murder > 0 || player.criminalRecord?.murderAttempts > 0) return false;
         }
+        
+        // Check driver license
+        if (job.requirements.driverLicense && !player.driverLicense) return false;
+        
+        // Check skill requirements
+        const skillChecks = ['programming', 'music', 'handiness', 'cooking'];
+        for (const skill of skillChecks) {
+            if (job.requirements[skill] && (!player.stats[skill] || player.stats[skill] < job.requirements[skill])) {
+                return false;
+            }
+        }
+        
+        return true;
+    } catch (error) {
+        console.error('Error checking job requirements:', error);
+        return false;
     }
+};
+
+// Career progression handling
+const handleCareerProgression = (player) => {
+    if (!player || !player.job || player.job === 'none') return;
     
-    return true;
+    try {
+        // Update performance
+        if (typeof player.job.performance === 'number') {
+            const performanceChange = Math.floor(Math.random() * 10) - 4; // -4 to +5
+            player.job.performance = Math.max(PERFORMANCE_MIN, 
+                                           Math.min(PERFORMANCE_MAX, 
+                                                  player.job.performance + performanceChange));
+        }
+
+        // Handle promotions
+        if (player.job.promotion && player.job.promotion !== 'none') {
+            const promotionJob = jobs.find(j => j.label === player.job.promotion);
+            if (promotionJob && player.job.performance >= 90 && meetsJobRequirements(promotionJob, player)) {
+                player.job = {
+                    ...promotionJob,
+                    performance: 50 // Reset performance for new position
+                };
+                if (typeof EnhancedUI !== 'undefined') {
+                    EnhancedUI.showNotification(`Promoted to ${promotionJob.label}!`, 'success');
+                }
+            }
+        }
+
+        // Apply job buffs
+        if (typeof player.job.buff === 'function') {
+            player.job.buff(player);
+        }
+
+    } catch (error) {
+        console.error('Error in career progression:', error);
+    }
+};
+
+// Export career system
+const CareerSystem = {
+    universityCareers,
+    specialCareers,
+    jobs,
+    meetsJobRequirements,
+    handleCareerProgression,
+    MINIMUM_WORKING_AGE,
+    PERFORMANCE_MIN,
+    PERFORMANCE_MAX
 };
