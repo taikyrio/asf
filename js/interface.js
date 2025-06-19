@@ -174,7 +174,16 @@ const deathScreen = () => {
 
 const annualChanges = () => {
     try {
-        const state = gameState.getState();
+        // Check if gameState is initialized
+        if (typeof window.gameState === 'undefined') {
+            console.error('Game state not initialized');
+            if (typeof EnhancedUI !== 'undefined') {
+                EnhancedUI.showNotification('Game state not initialized', 'error');
+            }
+            return;
+        }
+
+        const state = window.gameState.getState();
         const updates = {
             year: state.year + 1,
             characters: state.characters.map(person => {

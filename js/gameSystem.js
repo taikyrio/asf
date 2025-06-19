@@ -176,12 +176,13 @@ class GameSystem {
     }
 }
 
+// Game state management
 class GameStateManager {
     constructor() {
         this._state = {
             player: null,
             characters: [],
-            year: 0,
+            year: Math.round(Math.random() * 20) + 2000,
             version: "1.0"
         };
         this._subscribers = new Set();
@@ -243,7 +244,7 @@ class GameStateManager {
         this._state = {
             player: null,
             characters: [],
-            year: 0,
+            year: Math.round(Math.random() * 20) + 2000,
             version: this._state.version
         };
         this._subscribers.forEach(callback => callback(this._state));
@@ -251,4 +252,9 @@ class GameStateManager {
 }
 
 // Initialize global state manager
-const gameState = new GameStateManager();
+window.gameState = new GameStateManager();
+
+// Export for module usage
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { GameStateManager };
+}
