@@ -1,3 +1,4 @@
+
 const childhoodEducation = {
     preschool: {
         label:'Preschool',
@@ -68,11 +69,36 @@ const universityCareers = {
             player.stats.smartness += Math.floor(Math.random() * 5)
         }
     },
+    music: {
+        label: 'music',
+        name: 'Music',
+        duration: 4,
+        buff(player) {
+            player.stats.smartness += Math.floor(Math.random() * 3)
+            player.stats.music += Math.floor(Math.random() * 8) + 2
+            player.skills.music.xp += 75 + Math.floor(Math.random() * 25)
+        }
+    }
+}
 
-
+// Special Careers - Available at different ages
+const specialCareers = {
+    musician: {
+        label: 'Musician Career',
+        minAge: 10,
+        icon: '🎵',
+        description: 'Pursue a career in music. Success depends heavily on your Musical skill.',
+        isSpecial: true,
+        requirements: {
+            minAge: 10
+        },
+        // This is handled separately in the menu system
+        activation: 'musicianCareer'
+    }
 }
 
 const jobs = [
+    // Technology Jobs
     {
         label: 'Jr App Developer',
         requirements: {
@@ -80,118 +106,45 @@ const jobs = [
             programming: 3
         },
         salary: 55000,
-        field: 'technology',
+        field: 'Technology',
+        category: 'Corporate',
+        icon: '💻',
         promotion: 'App Developer',
         buff(player){
             player.skills.programming.xp += 5 + Math.floor(Math.random() * 20);
         }
-    }, {
+    }, 
+    {
         label: 'App Developer',
         requirements: {
             education: 'computerScience',
             programming: 5
         },
         salary: 75000,
-        field: 'technology',
+        field: 'Technology',
+        category: 'Corporate',
+        icon: '💻',
         promotion: 'Sr App Developer',
         buff(player){
             player.skills.programming.xp += 5 + Math.floor(Math.random() * 20);
         }
-    }, {
+    }, 
+    {
         label: 'Sr App Developer',
         requirements: {
             education: 'computerScience',
             programming: 8
         },
         salary: 100000,
-        field: 'technology',
+        field: 'Technology',
+        category: 'Corporate',
+        icon: '💻',
         promotion: 'none',
         buff(player){
             player.skills.programming.xp += 5 + Math.floor(Math.random() * 20);
         }
-    }, {
-        label: 'Supermarket cashier',
-        requirements: {
-            minAge: 16
-        },
-        salary: 25000,
-        field: '',
-        promotion: 'none',
-        buff(player){
-            return
-        }
-    },{
-        label: 'Janitor',
-        requirements: {
-            minAge: 16
-        },
-        salary: 18000,
-        field: '',
-        promotion: 'none',
-        buff(player){
-            player.skills.handiness.xp += 5 + Math.floor(Math.random() * 20);
-        }
-    }, {
-        label: 'History teacher',
-        requirements: {
-            minAge: 20,
-            education: 'history'
-        },
-        salary: 50000,
-        field: 'history',
-        promotion: 'none',
-        buff(player){
-            return
-        }
-    },{
-        label: 'Math teacher',
-        requirements: {
-            minAge: 20,
-            education: 'math'
-        },
-        salary: 50000,
-        field: 'math',
-        promotion: 'none',
-        buff(player){
-            return
-        }
-    },{
-        label: 'Gym trainer',
-        requirements: {
-            minAge: 18,
-            fitness: 70
-        },
-        salary: 36000,
-        field: 'fitness',
-        promotion: 'none',
-        buff(player){
-            return
-        }
-    }, {
-        label: 'Chemistry teacher',
-        requirements: {
-            minAge: 20,
-            education: 'chemistry'
-        },
-        salary: 50000,
-        field: 'chemistry',
-        promotion: 'none',
-        buff(player){
-            return
-        }
-    }, {
-        label: 'Biology teacher',
-        requirements: {
-            minAge: 20,
-            education: 'biology'
-        },
-        salary: 50000,
-        field: 'biology',
-        promotion: 'none',
-        buff(player){
-            return
-        }
-    }, {
+    },
+    {
         label: 'Jr Web developer',
         requirements: {
             minAge: 18,
@@ -199,95 +152,249 @@ const jobs = [
             programming: 2
         },
         salary: 52000,
-        field: 'technology',
+        field: 'Technology',
+        category: 'Corporate',
+        icon: '🌐',
         promotion: 'Web developer',
         buff(player){
             player.skills.programming.xp += 5 + Math.floor(Math.random() * 20);
         }
-    }, {
+    }, 
+    {
         label: 'Web developer',
         requirements: {
             education: 'computerScience',
             programming: 4
         },
         salary: 65000,
-        field: 'technology',
+        field: 'Technology',
+        category: 'Corporate',
+        icon: '🌐',
         promotion: 'Sr Web developer',
         buff(player){
             player.skills.programming.xp += 5 + Math.floor(Math.random() * 20);
         }
-    }, {
+    }, 
+    {
         label: 'Sr Web developer',
         requirements: {
             education: 'computerScience',
             programming: 7
         },
         salary: 80000,
-        field: 'technology',
+        field: 'Technology',
+        category: 'Corporate',
+        icon: '🌐',
         promotion: 'none',
         buff(player){
             player.skills.programming.xp += 5 + Math.floor(Math.random() * 20);
         }
-    }, {
-        label: 'Truck driver',
+    },
+    {
+        label: 'Computer Programmer',
         requirements: {
-            driverLicense: true
+            education: 'computerScience',
+            programming: 6
         },
-        salary: 40000,
-        field: 'transport',
+        salary: 70000,
+        field: 'Technology',
+        category: 'Corporate',
+        icon: '⌨️',
+        promotion: 'none',
+        buff(player){
+            player.skills.programming.xp += 8 + Math.floor(Math.random() * 15);
+        }
+    },
+
+    // Entry Level Jobs
+    {
+        label: 'Supermarket cashier',
+        requirements: {
+            minAge: 16
+        },
+        salary: 25000,
+        field: 'Retail',
+        category: 'Entry Level',
+        icon: '🛒',
         promotion: 'none',
         buff(player){
             return
         }
-    }, {
-        label: 'Taxi driver',
+    },
+    {
+        label: 'Janitor',
         requirements: {
-            driverLicense: true
+            minAge: 16
         },
-        salary: 48000,
-        field: 'transport',
+        salary: 18000,
+        field: 'Maintenance',
+        category: 'Entry Level',
+        icon: '🧹',
+        promotion: 'none',
+        buff(player){
+            player.skills.handiness.xp += 5 + Math.floor(Math.random() * 20);
+        }
+    },
+    {
+        label: 'Barber',
+        requirements: {
+            handiness: 3,
+            minAge: 18,
+            criminalRecord: 'clean'
+        },
+        salary: 24000,
+        field: 'Personal Care',
+        category: 'Small Business',
+        icon: '✂️',
         promotion: 'none',
         buff(player){
             return
         }
-    }, {
+    },
+
+    // Education Jobs
+    {
+        label: 'History teacher',
+        requirements: {
+            minAge: 20,
+            education: 'history'
+        },
+        salary: 50000,
+        field: 'Education',
+        category: 'Education',
+        icon: '📚',
+        promotion: 'none',
+        buff(player){
+            return
+        }
+    },
+    {
+        label: 'Math teacher',
+        requirements: {
+            minAge: 20,
+            education: 'math'
+        },
+        salary: 50000,
+        field: 'Education',
+        category: 'Education',
+        icon: '📐',
+        promotion: 'none',
+        buff(player){
+            return
+        }
+    },
+    {
+        label: 'Chemistry teacher',
+        requirements: {
+            minAge: 20,
+            education: 'chemistry'
+        },
+        salary: 50000,
+        field: 'Education',
+        category: 'Education',
+        icon: '🧪',
+        promotion: 'none',
+        buff(player){
+            return
+        }
+    }, 
+    {
+        label: 'Biology teacher',
+        requirements: {
+            minAge: 20,
+            education: 'biology'
+        },
+        salary: 50000,
+        field: 'Education',
+        category: 'Education',
+        icon: '🔬',
+        promotion: 'none',
+        buff(player){
+            return
+        }
+    },
+    {
         label: 'Music teacher',
         requirements: {
             education: 'music',
-            music: 2
+            music: 3
         },
         salary: 50000,
-        field: 'music',
+        field: 'Education',
+        category: 'Education',
+        icon: '🎼',
         promotion: 'none',
         buff(player){
             player.skills.music.xp += 5 + Math.floor(Math.random() * 20);
         }
-    }, {
+    },
+
+    // Music Industry Jobs (not the special career)
+    {
         label: 'Pianist',
         requirements: {
             education: 'music',
             music: 4
         },
         salary: 55000,
-        field: 'music',
+        field: 'Arts',
+        category: 'Entertainment',
+        icon: '🎹',
         promotion: 'none',
         buff(player){
             player.skills.music.xp += 5 + Math.floor(Math.random() * 20);
+            player.stats.music += Math.floor(Math.random() * 3);
         }
-    }, {
-        label: 'Guru',
+    },
+
+    // Fitness Jobs
+    {
+        label: 'Gym trainer',
         requirements: {
-            happiness: 100,
-            health: 100,
             minAge: 18,
-            criminalRecord: 'clean'
+            fitness: 70
         },
-        salary: 78000,
+        salary: 36000,
+        field: 'Fitness',
+        category: 'Health & Fitness',
+        icon: '💪',
         promotion: 'none',
         buff(player){
             return
         }
     },
+
+    // Transportation Jobs
+    {
+        label: 'Truck driver',
+        requirements: {
+            driverLicense: true
+        },
+        salary: 40000,
+        field: 'Transportation',
+        category: 'Transportation',
+        icon: '🚛',
+        promotion: 'none',
+        buff(player){
+            return
+        }
+    }, 
+    {
+        label: 'Taxi driver',
+        requirements: {
+            driverLicense: true
+        },
+        salary: 48000,
+        field: 'Transportation',
+        category: 'Transportation',
+        icon: '🚕',
+        promotion: 'none',
+        buff(player){
+            return
+        }
+    },
+
+    // Construction Jobs
     {
         label: 'Apprentice carpenter',
         requirements: {
@@ -296,7 +403,9 @@ const jobs = [
             fitness: 70
         },
         salary: 41000,
-        field: 'construction',
+        field: 'Construction',
+        category: 'Construction',
+        icon: '🔨',
         promotion: 'none',
         buff(player){
             player.skills.handiness.xp += 5 + Math.floor(Math.random() * 20);
@@ -309,7 +418,9 @@ const jobs = [
             minAge: 18
         },
         salary: 30000,
-        field: 'construction',
+        field: 'Construction',
+        category: 'Construction',
+        icon: '🏗️',
         promotion: 'Construction worker',
         buff(player){
             player.skills.handiness.xp += 5 + Math.floor(Math.random() * 20);
@@ -322,12 +433,16 @@ const jobs = [
             minAge: 18
         },
         salary: 40000,
-        field: 'construction',
+        field: 'Construction',
+        category: 'Construction',
+        icon: '🏗️',
         promotion: 'none',
         buff(player){
             player.skills.handiness.xp += 5 + Math.floor(Math.random() * 20);
         }
     },
+
+    // Law Enforcement
     {
         label: 'Police officer',
         requirements: {
@@ -336,26 +451,16 @@ const jobs = [
             criminalRecord: 'clean'
         },
         salary: 55000,
-        field: 'lawEnforcement',
+        field: 'Law Enforcement',
+        category: 'Government',
+        icon: '👮',
         promotion: 'none',
         buff(player){
             return
         }
     },
-    {
-        label: 'Barber',
-        requirements: {
-            handiness: 3,
-            minAge: 18,
-            criminalRecord: 'clean'
-        },
-        salary: 24000,
-        field: 'smallBussiness',
-        promotion: 'none',
-        buff(player){
-            return
-        }
-    },
+
+    // Medical Jobs
     {
         label: 'Apprentice pediatrician',
         requirements: {
@@ -363,7 +468,9 @@ const jobs = [
             minAge: 20,
         },
         salary: 50000,
-        field: 'medicine',
+        field: 'Medicine',
+        category: 'Medical',
+        icon: '👨‍⚕️',
         promotion: 'Pediatrician',
         buff(player){
             return
@@ -377,10 +484,72 @@ const jobs = [
             handiness: 3
         },
         salary: 75000,
-        field: 'medicine',
+        field: 'Medicine',
+        category: 'Medical',
+        icon: '👨‍⚕️',
+        promotion: 'none',
+        buff(player){
+            return
+        }
+    },
+
+    // Special Lifestyle Job
+    {
+        label: 'Guru',
+        requirements: {
+            happiness: 100,
+            health: 100,
+            minAge: 18,
+            criminalRecord: 'clean'
+        },
+        salary: 78000,
+        field: 'Spiritual',
+        category: 'Lifestyle',
+        icon: '🧘',
         promotion: 'none',
         buff(player){
             return
         }
     }
 ];
+
+// Function to get jobs by category for BitLife-like display
+const getJobsByCategory = () => {
+    const categories = {};
+    
+    jobs.forEach(job => {
+        const category = job.category || 'Other';
+        if (!categories[category]) {
+            categories[category] = [];
+        }
+        categories[category].push(job);
+    });
+    
+    return categories;
+};
+
+// Function to check if player meets job requirements
+const meetsJobRequirements = (job, player) => {
+    // Check age requirement
+    if (job.requirements.minAge && player.age < job.requirements.minAge) return false;
+    
+    // Check education requirement
+    if (job.requirements.education && !player.career[job.requirements.education]) return false;
+    
+    // Check criminal record
+    if (job.requirements.criminalRecord === 'clean') {
+        if (player.criminalRecord.murder > 0 || player.criminalRecord.murderAttempts > 0) return false;
+    }
+    
+    // Check driver license
+    if (job.requirements.driverLicense && !player.driverLicense) return false;
+    
+    // Check skill requirements
+    for (const [skill, level] of Object.entries(job.requirements)) {
+        if (skill !== 'minAge' && skill !== 'education' && skill !== 'criminalRecord' && skill !== 'driverLicense') {
+            if (player.stats[skill] < level) return false;
+        }
+    }
+    
+    return true;
+};

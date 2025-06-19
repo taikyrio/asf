@@ -25,7 +25,8 @@ class Person {
         happiness: randomStat(0, 100),
         smartness: randomStat(0, 100),
         fitness: randomStat(0, 35),
-        appearance: randomStat(0, 100)
+        appearance: randomStat(0, 100),
+        music: randomStat(0, 30)
     }
 
     relationships = {
@@ -188,20 +189,24 @@ const interfaceLoading = () => {
     moneyViewer()
     jobAssigner(characters)
     firstMessage()
-    const menu = document.getElementById('create-character-screen')
-    menu.style.display = 'none'
-    menu.innerHTML = `
-        <h1>Choose how will you create your character</h1>
-        <div id="buttons-container">
-            <button class="create-btn" onclick="randomCharacter()">Random</button>
-            <button class="create-btn" onclick="displayCustomization()">Custom</button>
-        </div>
-    `
+    
+    // Hide all menu screens
+    document.getElementById('splash-screen').style.display = 'none'
+    document.getElementById('main-menu-screen').style.display = 'none'
+    document.getElementById('create-character-screen').style.display = 'none'
+    
     const bars = document.getElementsByClassName('bar-progress');
     for (let bar of bars) {
         bar.style.animationName = 'animation-bar';
         bar.style.transition = 'all ease 0.3s'
     }
+    
+    // Update career button state
+    setTimeout(() => {
+        if (typeof updateCareerButtonState === 'function') {
+            updateCareerButtonState();
+        }
+    }, 100);
 }
 
 //sets jobs for npcs

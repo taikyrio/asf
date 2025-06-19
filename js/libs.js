@@ -156,15 +156,33 @@ const statbarColorer = () => {
     }
 }
 
-const handleStatBars = (person, isPlayer) => {
+const handleStatBars = (person, isPlayer, prefix = '') => {
     const stats = ['health', 'happiness', 'smartness', 'appearance', 'fitness'];
     const windowStat = ['relationWithPlayer', 'health', 'happiness', 'smartness', 'appearance', 'fitness']
 
-    if(isPlayer) for (let stat of stats) {
-        document.getElementById(`${stat}-bar`).style.width = `${person.stats[stat]}%`
+    if(isPlayer && !prefix) {
+        for (let stat of stats) {
+            const element = document.getElementById(`${stat}-bar`);
+            if (element) {
+                element.style.width = `${person.stats[stat]}%`
+            }
+        }
     }
-    else for(let stat of windowStat){
-        document.getElementById(`window-${stat}-bar`).style.width = `${person.stats[stat]}%`
+    else if(prefix === 'profile') {
+        for (let stat of stats) {
+            const element = document.getElementById(`${prefix}-${stat}-bar`);
+            if (element) {
+                element.style.width = `${person.stats[stat]}%`
+            }
+        }
+    }
+    else {
+        for(let stat of windowStat){
+            const element = document.getElementById(`window-${stat}-bar`);
+            if (element) {
+                element.style.width = `${person.stats[stat]}%`
+            }
+        }
     }
     statbarColorer()
 }

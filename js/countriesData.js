@@ -493,7 +493,8 @@ const surnames = {
     irish: ['Murphy', 'McCarthy', 'Doyle'],
     armenian: ['Grigoryan', 'Sargsyan', 'Harutyunyan'],
     ukrainian: ['Bondarenko', 'Kovalenko', 'Boiko', 'Tkachenko', 'Kravchenko', 'Kovalchuk'],
-}
+    chinese: ['Wang', 'Li', 'Zhang', 'Liu']
+};
 
 const popularYoutubers = [
     { user: 'Sr Bestia', subscribers: 190000000 },
@@ -504,4 +505,4 @@ const popularYoutubers = [
     { user: 'PlayGeorge', subscribers: 90000000 },
     { user: 'Rincon de Jose', subscribers: 46000000 },
     { user: 'Fast', subscribers: 58200000 }
-]
+];

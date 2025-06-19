@@ -1,321 +1,177 @@
-"use strict";
-
 const items = {
     weapons: [
         {
             label: 'Knife',
-            price: 5000,
-            successChance: 35,
-            image: 'knife.png',
-            type: 'weapons',
-            index: 0
+            price: 15,
+            category: 'weapons',
+            successChance: 60
         },
         {
             label: 'Handgun',
-            price: 32000,
-            successChance: 55,
-            image: 'handgun.png',
-            type: 'weapons',
-            index: 1
+            price: 800,
+            category: 'weapons',
+            successChance: 85
         },
         {
             label: 'Shotgun',
-            price: 50000,
-            successChance: 75,
-            image: 'shotgun.png',
-            type: 'weapons',
-            index: 2
+            price: 1200,
+            category: 'weapons',
+            successChance: 90
         },
         {
             label: 'RPG',
-            price: 150000,
-            successChance: 86,
-            image: 'rpg.png',
-            type: 'weapons',
-            index: 3
+            price: 15000,
+            category: 'weapons',
+            successChance: 95
         }
     ],
     instruments: [
         {
-            label: 'Piano',
-            price: 16000,
-            image: 'piano.png',
-            type: 'instruments',
-            index: 0
+            label: 'Guitar',
+            price: 300,
+            category: 'instruments'
         },
         {
-            label: 'Guitar',
-            price: 5000,
-            image: 'guitar.png',
-            type: 'instruments',
-            index: 1
+            label: 'Piano',
+            price: 2000,
+            category: 'instruments'
         },
         {
             label: 'Violin',
-            price: 5000,
-            image: 'violin.png',
-            type: 'instruments',
-            index: 2
+            price: 500,
+            category: 'instruments'
         },
         {
             label: 'Bass',
-            price: 4800,
-            image: 'bass.png',
-            type: 'instruments',
-            index: 3
-        },
-        {
-            label: 'Flute',
-            price: 5,
-            image: 'flute.png',
-            type: 'instruments',
-            index: 4
+            price: 400,
+            category: 'instruments'
         }
     ],
-    electronics : [
+    electronics: [
         {
             label: 'Smartphone',
-            price: 6000,
-            image: 'smartphone.png',
-            type: 'electronics',
-            index: 0
+            price: 800,
+            category: 'electronics'
         },
         {
             label: 'Laptop',
-            price: 12000,
-            image: 'laptop.png',
-            type: 'electronics',
-            index: 1
+            price: 1500,
+            category: 'electronics'
+        },
+        {
+            label: 'PC',
+            price: 2500,
+            category: 'electronics'
         }
     ],
     fastFood: [
         {
-            label: 'Hamburguer',
-            price: 35,
-            image: 'hamburguer.png',
-            type: 'fastFood',
-            index: 0,
-            statChanges: {
-                health: -1,
-                happiness: 5,
-                fitness: -1
-            }
+            label: 'Burger',
+            price: 8,
+            category: 'fastFood',
+            statChanges: { health: -2, happiness: 3 }
         },
         {
             label: 'Pizza',
-            price: 50,
-            image: 'pizza.png',
-            type: 'fastFood',
-            index: 1,
-            statChanges: {
-                health: -1,
-                happiness: 7,
-                fitness: -1
-            }
+            price: 12,
+            category: 'fastFood',
+            statChanges: { health: -1, happiness: 4 }
         },
         {
-            label: 'Hot dogs',
-            price: 30,
-            image:'hot_dog.png',
-            type: 'fastFood',
-            index: 2,
-            statChanges: {
-                health: -1,
-                happiness: 3,
-                fitness: -1
-            }
-        }
-    ],
-    vegetables: [
-        {
-            label: 'Potato',
-            price: 10,
-            image: 'potato.png',
-            type: 'vegetables',
-            index: 0,
-            statChanges: {
-                health: 2
-            }
-        },
-        {
-            label: 'Carrot',
-            price: 50,
-            image: 'carrot.png',
-            type: 'vegetables',
-            index: 1,
-            statChanges: {
-                health: 5
-            }
-        },
-        {
-            label: 'Broccoli',
-            price: 80,
-            image: 'broccoli.png',
-            type: 'vegetables',
-            index: 2,
-            statChanges: {
-                health: 7
-            }
+            label: 'Fries',
+            price: 5,
+            category: 'fastFood',
+            statChanges: { health: -3, happiness: 2 }
         }
     ],
     desserts: [
         {
-            label: 'Cotton candy',
-            price: 15,
-            image: 'cotton_candy.png',
-            index: 0,
-            type: 'desserts',
-            statChanges: {
-                happiness: 3,
-                health: -1
-            }
+            label: 'Ice Cream',
+            price: 6,
+            category: 'desserts',
+            statChanges: { health: -1, happiness: 5 }
         },
         {
-            label: 'Ice cream',
+            label: 'Cake',
             price: 15,
-            image: 'ice_cream.png',
-            index: 1,
-            type: 'desserts',
-            statChanges: {
-                happiness: 5
-            }
+            category: 'desserts',
+            statChanges: { health: -2, happiness: 8 }
+        }
+    ],
+    vegetables: [
+        {
+            label: 'Salad',
+            price: 10,
+            category: 'vegetables',
+            statChanges: { health: 5, happiness: -1 }
         },
         {
-            label: 'Chocolate bar',
-            price: 15,
-            image: 'chocolate.png',
-            index: 2,
-            type: 'desserts',
-            statChanges: {
-                happiness: 4,
-                fitness: -1
-            }
+            label: 'Broccoli',
+            price: 4,
+            category: 'vegetables',
+            statChanges: { health: 3 }
         }
     ],
     alcoholic: [
         {
-            label: 'Wine',
-            price: 60,
-            image: 'wine.png',
-            index: 0,
-            type: 'alcoholic',
-            statChanges: {
-                happiness: 12,
-                health: -8
-            }
+            label: 'Beer',
+            price: 5,
+            category: 'alcoholic',
+            statChanges: { health: -2, happiness: 3 }
         },
         {
-            label: 'Beer',
-            price: 25,
-            image: 'beer.png',
-            index: 1,
-            type: 'alcoholic',
-            statChanges: {
-                happiness: 10,
-                health: -8
-            }
+            label: 'Wine',
+            price: 15,
+            category: 'alcoholic',
+            statChanges: { health: -3, happiness: 4 }
         },
         {
             label: 'Vodka',
-            price: 50,
-            image: 'vodka.png',
-            index: 2,
-            type: 'alcoholic',
-            statChanges: {
-                happiness: 11,
-                health: -7
-            }
+            price: 25,
+            category: 'alcoholic',
+            statChanges: { health: -5, happiness: 2 }
         }
     ],
     nonAlcoholic: [
         {
-            label: 'Orange juice',
-            price: 15,
-            image: 'orange_juice.png',
-            index: 0,
-            type: 'nonAlcoholic',
-            statChanges: {
-                happiness: 4
-            }
+            label: 'Water',
+            price: 2,
+            category: 'nonAlcoholic',
+            statChanges: { health: 1 }
         },
         {
-            label: 'Milk',
+            label: 'Soda',
+            price: 3,
+            category: 'nonAlcoholic',
+            statChanges: { health: -1, happiness: 2 }
+        },
+        {
+            label: 'Energy Drink',
             price: 5,
-            image: 'milk.png',
-            index: 1,
-            type: 'nonAlcoholic',
-            statChanges: {
-                happiness: 2
-            }
+            category: 'nonAlcoholic',
+            statChanges: { health: -2, fitness: 2 }
         }
     ]
-}
+};
 
-const assets = {
-    houses: [
-        {
-            label: 'Modern House',
-            age: Math.floor(Math.random() * 10),
-            condition: Math.floor(Math.random() * 100),
-            price: 510000
-        }, 
-        {
-            label: 'House boat',
-            age: Math.floor(Math.random() * 120),
-            condition: Math.floor(Math.random() * 100),
-            price: 60000
-        },
-        {
-            label: 'Tiny apartment',
-            age: Math.floor(Math.random() * 100),
-            condition: Math.floor(Math.random() * 100),
-            price: 75000
-        },
-        {
-            label: 'Big Mansion',
-            age: Math.floor(Math.random() * 100),
-            condition: Math.floor(Math.random() * 100),
-            price: 2000000
-        }
-    ],
-    cars: [
-        {
-            label: 'Alpine A110',
-            price: 107000,
-        }, {
-            label: 'Aiways U5',
-            price: 42690
-        }, {
-            label: 'Bolt 550S',
-            price: 124000
-        }, {
-            label: 'Onyx Zeal',
-            price: 113000
-        }, {
-            label: 'FRX Catalyst',
-            price: 58000
-        }, {
-            label: 'Shelly Behemot GT',
-            price: 56000
-        }, {
-            label: 'EOS Nimbus',
-            price: 54000
-        }, {
-            label: 'Ranger Expedition',
-            price: 26000
-        }, {
-            label: 'Ranger Radiance',
-            price: 35000
-        }
-    ]
-}
+const itemListifier = (itemsObj, category, type) => {
+    if (!itemsObj || !itemsObj[category]) return '';
+    
+    return itemsObj[category].map((item, index) => {
+        return `<li class="option" data-objname="${type}" data-property="${category}" data-index="${index}" onclick="windows.items.buyWindow(this)">
+            ${item.label} - ${moneyFormat(item.price)}$
+        </li>`;
+    }).join('');
+};
 
-const randomizeHouseStats = () => {
-    for(let house of assets.houses){
-        house.age = Math.floor(Math.floor(Math.random() * 120));
-        house.condition = Math.floor(Math.floor(Math.random() * 100));
+const ownedAssets = (type) => {
+    if (!player.inventory[type] || player.inventory[type].length === 0) {
+        return '<p>You don\'t own any items in this category.</p>';
     }
-    // for(let car of assets.cars){
-    //     console.log(car)        
-    // }
-}
+    
+    return player.inventory[type].map((item, index) => {
+        return `<div class="cell" data-type="${type}" data-index="${index}" onclick="windows.items.ownedAssetWindow(this)">
+            ${item.label}
+        </div>`;
+    }).join('');
+};

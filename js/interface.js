@@ -12,6 +12,33 @@ let year = Math.round(Math.random() * 20) + 2000;
 
 
 //this is when you customize your character
+const updateCareerButtonState = () => {
+    const careerButton = document.getElementById('career-button');
+    if (careerButton && player) {
+        if (player.age < 18) {
+            careerButton.classList.add('disabled');
+            careerButton.title = 'Career options unlock at age 18';
+        } else {
+            careerButton.classList.remove('disabled');
+            careerButton.title = 'Career options';
+        }
+    }
+};
+
+const handleCareerClick = () => {
+    if (!player || player.age < 18) {
+        showEvent({
+            title: 'Career Locked',
+            body: '<p>You must be at least 18 years old to access career options.</p><div class="option" onclick="closeEvent()">OK</div>'
+        });
+        return;
+    }
+    
+    if (typeof menu !== 'undefined' && menu.job) {
+        menu.job();
+    }
+};
+
 const displayCustomization = () => {
     const characterScreen = document.getElementById('create-character-screen');
     characterScreen.innerHTML = `
@@ -55,16 +82,56 @@ const displayCustomization = () => {
 }
 
 //called after dying
+// Splash screen and menu system
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        document.getElementById('splash-screen').style.display = 'none';
+        document.getElementById('main-menu-screen').style.display = 'flex';
+    }, 3000);
+});
+
+const showCharacterCreation = () => {
+    document.getElementById('main-menu-screen').style.display = 'none';
+    document.getElementById('create-character-screen').style.display = 'flex';
+}
+
+const backToMainMenu = () => {
+    document.getElementById('create-character-screen').style.display = 'none';
+    document.getElementById('main-menu-screen').style.display = 'flex';
+}
+
+const showSettings = () => {
+    // Placeholder for settings menu
+    alert('Settings menu coming soon!');
+}
+
+const showAbout = () => {
+    // Show about dialog
+    showEvent({
+        title: 'About LifeWay',
+        body: `
+        <div style="text-align: center; padding: 10px;">
+            <h3>LifeWay</h3>
+            <p><strong>Developed by:</strong> AciddGames</p>
+            <p><strong>Version:</strong> 1.0.0</p>
+            <br>
+            <p>A comprehensive life simulation game where you can live, work, and make choices that shape your virtual life.</p>
+            <br>
+            <p>Experience the journey from birth to old age, build relationships, pursue careers, and create your own unique story.</p>
+        </div>
+        <div class="option" onclick="closeEvent()">Close</div>
+        `
+    });
+}
+
 const newLife = () => {
     const deathScreen = document.getElementById('death-screen');
-    const characterScreen = document.getElementById('create-character-screen')
+    const mainMenu = document.getElementById('main-menu-screen')
     textContainer.innerHTML = ''
 
     deathScreen.style.display = 'none'
-    characterScreen.style.display = 'block'
+    mainMenu.style.display = 'flex'
 }
-
-//im gonna move this somewhere else
 const deathScreen = () => {
     const ageBtnContainer = document.getElementById('age-btn-container');
     ageBtnContainer.innerHTML = `
@@ -142,6 +209,11 @@ const annualChanges = () => {
             player.job.performance -= Math.floor(Math.random() * 5)
     }
 
+    // Music career progression
+    if (player.musicCareer && player.musicCareer.active) {
+        handleMusicCareerProgression();
+    }
+
     // for university
     studyingProcess(textContainer)
     if(player.job != 'none') player.job.buff(player)
@@ -163,9 +235,61 @@ const annualChanges = () => {
     randomizeHouseStats()
     prisonHandler(player)
     eventsHandler()
+    
+    // Update career button state after aging
+    updateCareerButtonState()
+}
+
+const handleMusicCareerProgression = () => {
+    // Check for records finishing production
+    player.musicCareer.records.forEach(record => {
+        if (record.inProduction && year >= record.releaseYear) {
+            record.inProduction = false;
+            const success = Math.floor((player.stats.music / 100) * 100 + Math.random() * 50);
+            const sales = Math.floor(success * player.musicCareer.totalFans * 0.1);
+            const earnings = sales * (record.type === 'single' ? 1 : record.type === 'ep' ? 3 : 8);
+            
+            player.musicCareer.totalEarnings += earnings;
+            player.money.total += earnings;
+            
+            // Fan growth based on success
+            const fanGrowth = Math.floor(success * (player.stats.music / 100) * 50);
+            player.musicCareer.totalFans += fanGrowth;
+            
+            textContainer.innerHTML += `<p>My ${record.type} "${record.name}" was released! It earned $${earnings.toLocaleString()} and gained ${fanGrowth} fans</p>`;
+        }
+    });
+    
+    // Random music events
+    if (Math.random() < 0.1 && player.musicCareer.totalFans > 100) {
+        const eventTypes = ['concert', 'interview', 'collaboration'];
+        const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+        
+        switch(eventType) {
+            case 'concert':
+                const concertEarnings = Math.floor(player.musicCareer.totalFans * 0.3);
+                player.money.total += concertEarnings;
+                player.musicCareer.totalEarnings += concertEarnings;
+                textContainer.innerHTML += `<p>I performed a concert and earned $${concertEarnings.toLocaleString()}</p>`;
+                break;
+            case 'interview':
+                const fanIncrease = Math.floor(player.musicCareer.totalFans * 0.05);
+                player.musicCareer.totalFans += fanIncrease;
+                textContainer.innerHTML += `<p>I gave an interview and gained ${fanIncrease} new fans</p>`;
+                break;
+            case 'collaboration':
+                if (player.stats.music < 90) {
+                    player.stats.music += Math.floor(Math.random() * 3) + 1;
+                    textContainer.innerHTML += `<p>I collaborated with another artist and improved my music skills</p>`;
+                }
+                break;
+        }
+    }
 }
 
 const closeMenu = document.getElementById('close-menu');
 closeMenu.addEventListener('click', e => {
     menuTemplate.style.display = 'none'
 })
+
+// GameSystem is defined in gameSystem.js - no need to redefine here

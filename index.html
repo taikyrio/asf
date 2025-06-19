@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#2C3E50">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,11 +17,74 @@
 </head>
 <body>
 
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <div id="splash-content">
+            <div id="dev-logo">
+                <h3>AciddGames</h3>
+                <p>Presents</p>
+            </div>
+            <div id="game-title">
+                <h1>LifeWay</h1>
+                <p>A Life Simulation Experience</p>
+            </div>
+            <div id="splash-loading">
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="main-menu-screen">
+        <div id="main-menu-content">
+            <div id="menu-title">
+                <h1>LifeWay</h1>
+                <p>Choose your path</p>
+            </div>
+            <div id="menu-buttons">
+                <button class="menu-btn primary" onclick="showCharacterCreation()">
+                    <i class="fa-solid fa-play"></i>
+                    <span>New Life</span>
+                </button>
+                <button class="menu-btn" onclick="alert('Coming Soon!')">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span>Load Game</span>
+                </button>
+                <button class="menu-btn" onclick="showSettings()">
+                    <i class="fa-solid fa-cog"></i>
+                    <span>Settings</span>
+                </button>
+                <button class="menu-btn" onclick="showAbout()">
+                    <i class="fa-solid fa-info-circle"></i>
+                    <span>About</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Character Creation Screen -->
     <div id="create-character-screen">
-        <h1>Create your character</h1>
-        <div id="buttons-container">
-            <button class="create-btn" onclick="randomCharacter()">Random</button>
-            <button class="create-btn" onclick="displayCustomization()">Custom</button>
+        <div id="character-creation-content">
+            <h1>Create Your Character</h1>
+            <div id="creation-buttons">
+                <button class="creation-btn" onclick="randomCharacter()">
+                    <i class="fa-solid fa-dice"></i>
+                    <span>Random Character</span>
+                    <p>Generate a random character</p>
+                </button>
+                <button class="creation-btn" onclick="displayCustomization()">
+                    <i class="fa-solid fa-user-edit"></i>
+                    <span>Custom Character</span>
+                    <p>Customize your character</p>
+                </button>
+            </div>
+            <button class="back-btn" onclick="backToMainMenu()">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Menu
+            </button>
         </div>
     </div>
 
@@ -30,7 +96,7 @@
         </div>
     </div>
     <div id="events-container">
-        
+
     </div>
     <nav id="navbar">
         <div id="money-container" onclick="windows.playerData.moneyDashboard()" title="Display flow of money">
@@ -39,16 +105,6 @@
         </div>
     </nav>
     <main>
-    <div id="stats-container">
-        <ul id="stats-list">
-            <li>Health: <div class="bar"><div class="bar-progress" id="health-bar"></div></div> </li>
-            <li>Happiness: <div class="bar"><div class="bar-progress" id="happiness-bar"></div></div> </li>
-            <li>Smartness: <div class="bar"><div class="bar-progress" id="smartness-bar"></div></div> </li>
-            <li>Appearance: <div class="bar"><div class="bar-progress" id="appearance-bar"></div></div> </li>
-            <li>Fitness: <div class="bar"><div class="bar-progress" id="fitness-bar"></div></div> </li>
-            <div class="clear"></div>
-        </ul>
-    </div>
         <div id="tale-container">
             <div id="head-container">
                 Childhood
@@ -58,28 +114,39 @@
         <div id="control-container">
             <div class="row">
                 <div class="button-container" id="left-btn-container">
-                    
+
                 </div>
-                <div class="button-container" id="relationship-container">
-                    <button onclick="menu.relationships()" class="btn" id="relation-button">❤️</button>
+                <div class="button-container nav-btn" id="relationship-container">
+                    <button onclick="menu.relationships()" class="btn navigation-btn" id="relation-button">
+                        <i class="fa-solid fa-heart"></i>
+                    </button>
                     <p>Relationships</p>
                 </div>
-                <div class="button-container" id="profile-container">
-                    <button onclick="menu.profile()" class="btn">👤</button>
+                <div class="button-container nav-btn" id="profile-container">
+                    <button onclick="menu.profile()" class="btn navigation-btn">
+                        <i class="fa-solid fa-user"></i>
+                    </button>
                     <p>Profile</p>
                 </div>
             </div>
 
             <div class="row">
-                <div class="button-container" id="job-btn-container">
-                    <button onclick="menu.job()" class="btn">💼</button>
+                <div class="button-container nav-btn" id="job-btn-container">
+                    <button onclick="handleCareerClick()" class="btn navigation-btn" id="career-button">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </button>
                     <p>Career</p>
-                </div></div>
-                <div class="button-container" id="age-btn-container">
-                    <button id="age-btn" onclick="annualChanges()">Age</button>
                 </div>
-                <div class="button-container">
-                    <button onclick="menu.activities()" id="activities-btn"><i class="fa-solid fa-bars"></i></button>
+                <div class="button-container" id="age-btn-container">
+                    <button id="age-btn" class="age-button" onclick="annualChanges()">
+                        <i class="fa-solid fa-clock"></i>
+                        <span>Age</span>
+                    </button>
+                </div>
+                <div class="button-container nav-btn">
+                    <button onclick="menu.activities()" class="btn navigation-btn" id="activities-btn">
+                        <i class="fa-solid fa-gamepad"></i>
+                    </button>
                     <p>Activities</p>
                 </div>
             </div>
@@ -103,15 +170,19 @@
             </div>
         </div>
     </div>
-        <script src="js/items.js"></script>
-        <script src="js/countriesData.js"></script>
-        <script src="js/worldEvents.js"></script>
-        <script src="js/events.js"></script>
-        <script src="js/careers.js"></script>
-        <script src="js/libs.js"></script>
-        <script src="js/main.js"></script>
-        <script src="js/characters.js"></script>
-        <script src="js/menu.js"></script>
-        <script src="js/interface.js"></script>
+        <!-- Game Scripts - Load order is important -->
+    <script src="js/countriesData.js"></script>
+    <script src="js/libs.js"></script>
+    <script src="js/items.js"></script>
+    <script src="js/careers.js"></script>
+    <script src="js/characters.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/worldEvents.js"></script>
+    <script src="js/musicSystem.js"></script>
+    <script src="js/gameSystem.js"></script>
+    <script src="js/gameSettings.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/interface.js"></script>
     </body>
 </html>
