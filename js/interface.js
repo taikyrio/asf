@@ -41,31 +41,37 @@ const handleCareerClick = () => {
 const displayCustomization = () => {
     const characterScreen = document.getElementById("create-character-screen");
     characterScreen.innerHTML = `
-    <h1>Customize your character</h1>
-    <div class="input-group">
-        <label>Name</label>
-        <input id="name" type="text" autocomplete="off">
+    <div id="character-creation-content">
+        <h1>Customize your character</h1>
+        <div class="input-group">
+            <label>Name</label>
+            <input id="name" type="text" autocomplete="off">
 
-        <label>Surname</label>
-        <input id="surname" type="text" autocomplete="off">
+            <label>Surname</label>
+            <input id="surname" type="text" autocomplete="off">
 
-        <label>Age</label>
-        <input min="0" max="70" id="age" type="number">
+            <label>Age</label>
+            <input min="0" max="70" id="age" type="number">
 
-        <label>Gender</label>
-        <select id="gender">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
+            <label>Gender</label>
+            <select id="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
 
-        <label>Nationality</label>
-        <select id="nationality" value="american">
-            ${nationalityList()}
-        </select>
+            <label>Nationality</label>
+            <select id="nationality" value="american">
+                ${nationalityList()}
+            </select>
 
-        <label>Money</label>
-        <input min="0" step="10000" id="money" type="number">
-        <button onclick="customCharacter()" class="create-btn">Create</button>
+            <label>Money</label>
+            <input min="0" step="10000" id="money" type="number">
+            <button onclick="customCharacter()" class="create-btn">Create</button>
+        </div>
+        <button class="back-btn" onclick="backToMainMenu()">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Menu
+        </button>
     </div>
     `;
     //these two prevent typing white spaces in the inputs
@@ -80,9 +86,11 @@ const displayCustomization = () => {
     });
 };
 
-//called after dying
 // Splash screen and menu system
 document.addEventListener("DOMContentLoaded", () => {
+    // Show splash screen first
+    document.getElementById("splash-screen").style.display = "flex";
+
     setTimeout(() => {
         document.getElementById("splash-screen").style.display = "none";
         document.getElementById("main-menu-screen").style.display = "flex";
@@ -100,12 +108,27 @@ const backToMainMenu = () => {
 };
 
 const showSettings = () => {
-    // Placeholder for settings menu
-    alert("Settings menu coming soon!");
+    showEvent({
+        title: "Settings",
+        body: `
+        <div style="text-align: left; padding: 10px;">
+            <h3>Game Settings</h3>
+            <div class="setting-item">
+                <label><input type="checkbox" checked> Auto-save</label>
+            </div>
+            <div class="setting-item">
+                <label><input type="checkbox"> Sound effects</label>
+            </div>
+            <div class="setting-item">
+                <label><input type="checkbox"> Notifications</label>
+            </div>
+        </div>
+        <div class="option" onclick="closeEvent()">Close</div>
+        `,
+    });
 };
 
 const showAbout = () => {
-    // Show about dialog
     showEvent({
         title: "About LifeWay",
         body: `
@@ -126,11 +149,24 @@ const showAbout = () => {
 const newLife = () => {
     const deathScreen = document.getElementById("death-screen");
     const mainMenu = document.getElementById("main-menu-screen");
+    const gameScreen = document.querySelector("main");
     textContainer.innerHTML = "";
 
     deathScreen.style.display = "none";
+    gameScreen.style.display = "none";
     mainMenu.style.display = "flex";
 };
+
+const startGame = () => {
+    const mainMenu = document.getElementById("main-menu-screen");
+    const gameScreen = document.querySelector("main");
+    const navbar = document.getElementById("navbar");
+
+    mainMenu.style.display = "none";
+    gameScreen.style.display = "flex";
+    navbar.style.display = "flex";
+};
+
 const deathScreen = () => {
     const ageBtnContainer = document.getElementById("age-btn-container");
     ageBtnContainer.innerHTML = `
@@ -241,11 +277,11 @@ const annualChanges = () => {
         if (!state) {
             throw new Error("Game state is empty");
         }
-        
+
         // Initialize game state if it's empty or missing required data
         if (!state.characters || state.characters.length === 0) {
             console.warn("Game state characters empty, initializing with current game data");
-            
+
             // Initialize with global characters array if available
             if (typeof characters !== 'undefined' && Array.isArray(characters) && characters.length > 0) {
                 // Ensure player has characterIndex if not already set
@@ -255,13 +291,13 @@ const annualChanges = () => {
                         player.characterIndex = 0; // Default to first character
                     }
                 }
-                
+
                 const initialState = {
                     year: year || state.year,
                     characters: [...characters],
                     player: player ? { characterIndex: player.characterIndex } : null
                 };
-                
+
                 window.gameState.setState(initialState);
                 state = window.gameState.getState();
                 console.log("Game state initialized with player index:", player ? player.characterIndex : 'none');
@@ -302,12 +338,12 @@ const annualChanges = () => {
 
         // Simplified player lookup - use the global player directly
         let currentPlayer = player;
-        
+
         // Verify player exists
         if (!currentPlayer) {
             throw new Error("Global player object not available");
         }
-        
+
         // Make sure the player is at the correct index in state.characters
         if (state.characters.length > 0) {
             // Update the player reference in the characters array
@@ -316,7 +352,7 @@ const annualChanges = () => {
                 state.characters[playerIndex] = player;
             }
         }
-        
+
         console.log("Using global player object directly")
 
         // Handle pregnancy for all characters
@@ -563,4 +599,53 @@ closeMenu.addEventListener("click", (e) => {
     menuTemplate.style.display = "none";
 });
 
-// GameSystem is defined in gameSystem.js - no need to redefine here
+const interfaceLoading = () => {
+    try {
+        if (typeof window.player === 'undefined' || !window.player) {
+            console.error("Player not initialized");
+            return;
+        }
+
+        // Call functions with error handling
+        if (typeof handleStatBars === 'function') {
+            handleStatBars(window.player, true);
+        }
+        if (typeof lifeStageDisplayer === 'function') {
+            lifeStageDisplayer();
+        }
+        if (typeof moneyViewer === 'function') {
+            moneyViewer();
+        }
+        if (typeof jobAssigner === 'function' && typeof characters !== 'undefined') {
+            jobAssigner(characters);
+        }
+        if (typeof firstMessage === 'function') {
+            firstMessage();
+        }
+
+        // Hide all menu screens
+        const screens = ['splash-screen', 'main-menu-screen', 'create-character-screen'];
+        screens.forEach(screenId => {
+            const screen = document.getElementById(screenId);
+            if (screen) screen.style.display = 'none';
+        });
+
+        const bars = document.getElementsByClassName('bar-progress');
+        for (let bar of bars) {
+            bar.style.animationName = 'animation-bar';
+            bar.style.transition = 'all ease 0.3s';
+        }
+
+        // Update career button state and initialize menu options
+        setTimeout(() => {
+            if (typeof updateCareerButtonState === 'function') {
+                updateCareerButtonState();
+            }
+            if (typeof initializeMenuOptions === 'function') {
+                initializeMenuOptions();
+            }
+        }, 100);
+    } catch (error) {
+        console.error("Error in interfaceLoading:", error);
+    }
+}

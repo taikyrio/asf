@@ -223,7 +223,7 @@ const moneyFormat = (money) => {
     return parsedMoney.join('').slice(1)
 }
 
-const cvListifier = (player) =>{
+const cvListifier = (player) => {
     if(player.cv.length === 0) return `<p>You do not have job history</p>`
 
     let string = '';
@@ -233,9 +233,8 @@ const cvListifier = (player) =>{
         ${job.label} (${job.since} - ${job.until})
         </li>
         `)
-    return `<ul>${string}</ul>`
     }
-
+    return `<ul>${string}</ul>`
 }
 
 const lifeStageDisplayer = () => {
@@ -415,6 +414,25 @@ const barColor = (percentage) => {
 const scrolldown = (element) => {
     element.scrollTop = element.scrollHeight;
 }
+// Name data fallback
+if (typeof window.names === 'undefined') {
+    window.names = {
+        english: {
+            male: ["James", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph", "Thomas", "Christopher"],
+            female: ["Mary", "Patricia", "Jennifer", "Linda", "Elizabeth", "Barbara", "Susan", "Jessica", "Sarah", "Karen"],
+            surnames: ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez"]
+        },
+        spanish: {
+            male: ["José", "Antonio", "Juan", "Manuel", "Francisco", "Luis", "Miguel", "Carlos", "Pedro", "Alejandro"],
+            female: ["María", "Carmen", "Josefa", "Isabel", "Ana", "Dolores", "Pilar", "Teresa", "Rosa", "Francisca"],
+            surnames: ["García", "Rodríguez", "González", "Fernández", "López", "Martínez", "Sánchez", "Pérez", "Gómez", "Martín"]
+        },
+        german: {
+            male: ["Michael", "Thomas", "Andreas", "Wolfgang", "Klaus", "Jürgen", "Günter", "Stefan", "Uwe", "Werner"],
+            female: ["Ursula", "Monika", "Gabriele", "Petra", "Andrea", "Susanne", "Brigitte", "Christine", "Barbara", "Angelika"],
+            surnames: ["Müller", "Schmidt", "Schneider", "Fischer", "Weber", "Meyer", "Wagner", "Becker", "Schulz", "Hoffmann"]
+        }
+    };
+}
 
-
-
+// Randomizer functions

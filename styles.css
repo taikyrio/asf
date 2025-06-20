@@ -1,26 +1,29 @@
+/* Windows 11 Dark Theme Variables */
 :root {
-    --primary-color: #4A90E2;
-    --secondary-color: #5CB85C;
-    --accent-color: #F39C12;
-    --success-color: #27AE60;
-    --warning-color: #F39C12;
-    --danger-color: #E74C3C;
-
-    --bg-primary: #F8F9FA;
-    --bg-secondary: #FFFFFF;
-    --bg-tertiary: #E9ECEF;
-    --bg-card: #FFFFFF;
-    --bg-nav: #2C3E50;
-
-    --text-primary: #2C3E50;
-    --text-secondary: #6C757D;
-    --text-muted: #ADB5BD;
-    --text-white: #FFFFFF;
-
-    --border-color: #DEE2E6;
-    --border-radius: 12px;
-    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.15);
+    /* Windows 11 Dark Theme Colors */
+    --win11-bg-primary: #1e1e1e;
+    --win11-bg-secondary: #252525;
+    --win11-bg-card: #2d2d2d;
+    --win11-bg-elevated: #333333;
+    --win11-bg-acrylic: rgba(45, 45, 45, 0.9);
+    --win11-text-primary: #ffffff;
+    --win11-text-secondary: #e0e0e0;
+    --win11-text-tertiary: #b0b0b0;
+    --win11-accent: #0078d4;
+    --win11-accent-hover: #106ebe;
+    --win11-accent-pressed: #005a9e;
+    --win11-border: #3c3c3c;
+    --win11-border-hover: #555555;
+    --win11-border-divider: #2a2a2a;
+    --win11-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 0 4px rgba(0, 0, 0, 0.14);
+    --win11-shadow-elevated: 0 16px 32px rgba(0, 0, 0, 0.32), 0 0 8px rgba(0, 0, 0, 0.18);
+    --win11-radius-small: 4px;
+    --win11-radius-medium: 6px;
+    --win11-radius-large: 8px;
+    --win11-radius-xl: 12px;
+    --win11-success: #107c10;
+    --win11-warning: #ffc107;
+    --win11-error: #d83b01;
 }
 
 * {
@@ -30,10 +33,10 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    line-height: 1.6;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+    background: var(--win11-bg-primary);
+    color: var(--win11-text-primary);
+    line-height: 1.5;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -41,7 +44,7 @@ body {
 
 /* Navigation Bar */
 #navbar {
-    background: var(--bg-nav);
+    background: var(--win11-bg-secondary);
     padding: 12px 20px;
     position: fixed;
     top: 0;
@@ -49,30 +52,33 @@ body {
     right: 0;
     z-index: 100;
     height: 60px;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--shadow);
+    box-shadow: var(--win11-shadow);
+    border-bottom: 1px solid var(--win11-border);
 }
 
 #money-container {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    padding: 8px 16px;
-    border-radius: 20px;
+    background: linear-gradient(135deg, var(--win11-accent), var(--win11-accent-hover));
+    padding: 10px 18px;
+    border-radius: var(--win11-radius);
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow);
+    transition: all 0.2s ease;
+    box-shadow: var(--win11-shadow);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #money-container:hover {
+    background: linear-gradient(135deg, var(--win11-accent-hover), var(--win11-accent-pressed));
     transform: translateY(-1px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--win11-shadow-elevated);
 }
 
 #total-money {
     font-size: 16px;
     font-weight: 600;
-    color: var(--text-white);
+    color: var(--win11-text-primary);
     margin-bottom: 2px;
 }
 
@@ -83,40 +89,41 @@ body {
 
 /* Main Layout */
 main {
-    display: flex;
+    display: none;
     flex-direction: column;
     padding: 0;
     margin-top: 60px;
     min-height: calc(100vh - 60px);
-    background: var(--bg-primary);
+    background: var(--win11-bg-primary);
 }
 
 /* Story Container */
 #tale-container {
-    background: var(--bg-card);
+    background: var(--win11-bg-card);
     margin: 0;
     box-shadow: none;
     border-radius: 0;
     flex: 1;
     display: flex;
     flex-direction: column;
+    border-bottom: 1px solid var(--win11-border);
 }
 
 #head-container {
-    background: var(--bg-nav);
+    background: var(--win11-bg-secondary);
     padding: 16px 20px;
     text-align: center;
     font-size: 18px;
     font-weight: 600;
-    color: var(--text-white);
-    border-bottom: 1px solid var(--border-color);
+    color: var(--win11-text-primary);
+    border-bottom: 1px solid var(--win11-border);
 }
 
 #text-container {
     padding: 20px;
     flex: 1;
     overflow-y: auto;
-    background: var(--bg-card);
+    background: var(--win11-bg-card);
     min-height: 300px;
     max-height: calc(100vh - 300px);
 }
@@ -124,29 +131,32 @@ main {
 #text-container p {
     margin-bottom: 12px;
     padding: 12px 16px;
-    border-radius: var(--border-radius);
-    background: var(--bg-tertiary);
-    border-left: 4px solid var(--primary-color);
+    border-radius: var(--win11-radius);
+    background: var(--win11-bg-tertiary);
+    border-left: 4px solid var(--win11-accent);
     font-size: 15px;
     line-height: 1.5;
+    color: var(--win11-text-primary);
+    border: 1px solid var(--win11-border);
 }
 
 .yellow {
-    color: var(--warning-color);
+    color: var(--win11-warning);
     font-weight: 600;
 }
 
-/* Control Container - InstLife Style */
+/* Control Container - Windows 11 Style */
 #control-container {
-    background: var(--bg-nav);
+    background: var(--win11-bg-secondary);
     padding: 20px;
-    border-radius: 20px 20px 0 0;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: var(--win11-radius-large) var(--win11-radius-large) 0 0;
+    box-shadow: var(--win11-shadow-elevated);
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 50;
+    border-top: 1px solid var(--win11-border);
 }
 
 .row {
@@ -172,47 +182,50 @@ main {
 .button-container p {
     margin-top: 6px;
     font-size: 12px;
-    color: var(--text-white);
+    color: var(--win11-text-secondary);
     font-weight: 500;
-    opacity: 0.9;
 }
 
-/* Navigation Buttons */
+/* Navigation Buttons - Windows 11 Style */
 .btn {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--win11-bg-elevated);
+    border: 1px solid var(--win11-border);
     border-radius: 50%;
     width: 56px;
     height: 56px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    color: var(--text-white);
+    transition: all 0.2s ease;
+    color: var(--win11-text-primary);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--win11-shadow);
 }
 
-.btn:hover, .btn:active {
-    background: rgba(255, 255, 255, 0.25);
+.btn:hover:not(.disabled) {
+    background: var(--win11-bg-tertiary);
+    border-color: var(--win11-border-hover);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn:active:not(.disabled) {
+    transform: translateY(0);
+    background: var(--win11-accent);
 }
 
 /* Age Button */
 #age-btn {
-    background: linear-gradient(135deg, var(--success-color), #2ECC71);
-    border: none;
-    border-radius: 25px;
+    background: linear-gradient(135deg, var(--win11-success), #14a214);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--win11-radius-large);
     padding: 12px 24px;
-    color: var(--text-white);
+    color: var(--win11-text-primary);
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+    transition: all 0.2s ease;
+    box-shadow: var(--win11-shadow);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -220,32 +233,35 @@ main {
     justify-content: center;
 }
 
+#age-btn:hover {
+    background: linear-gradient(135deg, #14a214, var(--win11-success));
+    transform: translateY(-2px);
+    box-shadow: var(--win11-shadow-elevated);
+}
+
 /* Career Button Disabled State */
 #career-button.disabled {
     opacity: 0.5;
     cursor: not-allowed;
     filter: grayscale(1);
+    background: var(--win11-bg-tertiary);
+    border-color: var(--win11-text-disabled);
 }
 
 #career-button.disabled:hover {
     transform: none;
-    box-shadow: none;
+    background: var(--win11-bg-tertiary);
 }
 
-#age-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
-}
-
-/* Modal Improvements */
+/* Modal Improvements - Windows 11 Style */
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
     display: none;
     align-items: center;
     justify-content: center;
@@ -258,9 +274,10 @@ main {
 }
 
 .event-container {
-    background: var(--bg-card);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-lg);
+    background: var(--win11-bg-card);
+    border: 1px solid var(--win11-border);
+    border-radius: var(--win11-radius-large);
+    box-shadow: var(--win11-shadow-elevated);
     max-width: 400px;
     width: 100%;
     max-height: 80vh;
@@ -280,41 +297,43 @@ main {
 }
 
 .event-title {
-    background: var(--bg-nav);
+    background: var(--win11-bg-secondary);
     padding: 16px 20px;
     text-align: center;
     font-size: 18px;
     font-weight: 600;
-    color: var(--text-white);
+    color: var(--win11-text-primary);
+    border-bottom: 1px solid var(--win11-border);
 }
 
 .event-body {
     padding: 20px;
     max-height: 60vh;
     overflow-y: auto;
+    background: var(--win11-bg-card);
 }
 
 .option {
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
+    background: var(--win11-bg-elevated);
+    border: 1px solid var(--win11-border);
+    border-radius: var(--win11-radius);
     padding: 14px 16px;
     margin: 8px 0;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     text-align: center;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--win11-text-primary);
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.option:hover {
-    background: var(--primary-color);
-    color: var(--text-white);
+.option:hover:not(.disabled) {
+    background: var(--win11-accent);
+    border-color: var(--win11-accent-hover);
     transform: translateY(-1px);
-    box-shadow: var(--shadow);
+    box-shadow: var(--win11-shadow);
 }
 
 .option i {
@@ -324,130 +343,37 @@ main {
 }
 
 .disabled {
-    background: var(--bg-tertiary);
-    color: var(--text-muted);
-    cursor: not-allowed;
+    background: var(--win11-bg-tertiary) !important;
+    color: var(--win11-text-disabled) !important;
+    cursor: not-allowed !important;
     opacity: 0.6;
+    border-color: var(--win11-text-disabled) !important;
 }
 
 .disabled:hover {
-    background: var(--bg-tertiary);
-    color: var(--text-muted);
-    transform: none;
-    box-shadow: none;
+    transform: none !important;
+    box-shadow: none !important;
 }
 
-/* Menu Styles */
+/* Menu Styles - Windows 11 Style */
 #menu-template {
-    background: var(--bg-primary);
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    background: var(--win11-bg-primary);
     display: none;
-    z-index: 1000;
-    animation: slideUp 0.3s ease;
+    z-index: 2000;
     overflow-y: auto;
 }
 
-/* Job Grid Styles */
-#job-wrapper {
-    padding: 0;
-}
-
-#jobs-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-    padding: 20px;
-}
-
-.cell {
-    background: linear-gradient(135deg, var(--bg-card), #f8f9fb);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow);
-    position: relative;
-    overflow: hidden;
-    min-height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-weight: 600;
-    font-size: 16px;
-    color: var(--text-primary);
-}
-
-.cell::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-}
-
-.cell:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: var(--text-white);
-}
-
-.cell:hover::before {
-    transform: scaleX(1);
-}
-
-#current-job {
-    margin: 20px;
-    padding: 0;
-}
-
-#current-job .option {
-    background: linear-gradient(135deg, var(--success-color), #2ECC71);
-    border: none;
-    color: var(--text-white);
-    font-weight: 600;
-    font-size: 16px;
-    text-align: center;
-    padding: 16px 20px;
-    border-radius: var(--border-radius);
-    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-#current-job .option::before {
-    content: '💼';
-    margin-right: 10px;
-    font-size: 18px;
-}
-
-#current-job .option:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
-    background: linear-gradient(135deg, #2ECC71, var(--success-color));
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(100%);
-    }
-    to {
-        transform: translateY(0);
-    }
+#menu-template.show {
+    display: block;
 }
 
 .menu-header {
-    background: var(--bg-nav);
+    background: var(--win11-bg-secondary);
     padding: 16px 20px;
     display: flex;
     align-items: center;
@@ -455,24 +381,25 @@ main {
     position: sticky;
     top: 0;
     z-index: 10;
-    box-shadow: var(--shadow);
+    box-shadow: var(--win11-shadow);
+    border-bottom: 1px solid var(--win11-border);
 }
 
 .menu-header h2 {
     font-size: 18px;
     font-weight: 600;
-    color: var(--text-white);
+    color: var(--win11-text-primary);
 }
 
 #close-menu {
     background: none;
     border: none;
-    color: var(--text-white);
+    color: var(--win11-text-primary);
     font-size: 24px;
     cursor: pointer;
     padding: 8px;
-    border-radius: 50%;
-    transition: background 0.3s ease;
+    border-radius: var(--win11-radius);
+    transition: background 0.2s ease;
     width: 40px;
     height: 40px;
     display: flex;
@@ -481,249 +408,49 @@ main {
 }
 
 #close-menu:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--win11-bg-tertiary);
 }
 
 #menu-body {
     padding: 20px;
+    background: var(--win11-bg-primary);
 }
 
 #menu-template ul {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
 #menu-template li:not(.item-container) {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
+    background: var(--win11-bg-card);
+    border: 1px solid var(--win11-border);
+    border-radius: var(--win11-radius);
     padding: 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     gap: 12px;
-    box-shadow: var(--shadow);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-#menu-template li:hover {
-    background: var(--primary-color);
-    color: var(--text-white);
+#menu-template li:hover:not(.disabled) {
+    background: var(--win11-accent);
+    border-color: var(--win11-accent-hover);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--win11-shadow);
 }
 
-/* Relationship Styles */
-.relationship-category {
-    margin-bottom: 24px;
-    background: var(--bg-card);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border-color);
-}
-
-.relationship-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: var(--text-white);
-    padding: 16px 20px;
-    font-weight: 600;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.relationship-header::before {
-    font-size: 18px;
-}
-
-.relationship-header.parents::before { content: '👨‍👩‍👧‍👦'; }
-.relationship-header.siblings::before { content: '👫'; }
-.relationship-header.friends::before { content: '👥'; }
-.relationship-header.partner::before { content: '💕'; }
-.relationship-header.exPartners::before { content: '💔'; }
-.relationship-header.offspring::before { content: '👶'; }
-
-.relationship-list {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-}
-
-.relationship-item {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.relationship-item:last-child {
-    border-bottom: none;
-}
-
-.relationship-item:hover {
-    background: var(--bg-tertiary);
-    transform: translateX(4px);
-}
-
-.relationship-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.relationship-name {
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 15px;
-}
-
-.relationship-type {
-    font-size: 13px;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.relationship-status {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.opinion-indicator {
-    width: 80px;
-    height: 6px;
-    background: var(--bg-tertiary);
-    border-radius: 3px;
-    overflow: hidden;
-    position: relative;
-}
-
-.opinion-fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 0.6s ease;
-}
-
-.opinion-excellent { background: linear-gradient(90deg, #27AE60, #2ECC71); }
-.opinion-good { background: linear-gradient(90deg, #F39C12, #E67E22); }
-.opinion-poor { background: linear-gradient(90deg, #E74C3C, #C0392B); }
-
-.gender-icon {
-    font-size: 14px;
-    margin-left: 4px;
-}
-
-.dead-indicator {
-    color: var(--text-muted);
-    font-size: 12px;
-    font-style: italic;
-}
-
-/* Empty State */
-.relationship-empty {
-    padding: 24px 20px;
-    text-align: center;
-    color: var(--text-muted);
-    font-style: italic;
-}
-
-.relationship-empty::before {
-    content: '🚫';
-    display: block;
-    font-size: 24px;
-    margin-bottom: 8px;
-    opacity: 0.5;
-}
-
-/* Stats Bars */
-.bar {
-    background: var(--bg-tertiary);
-    border-radius: 10px;
-    height: 8px;
-    width: 100px;
-    overflow: hidden;
-    margin-left: auto;
-}
-
-.bar-progress {
-    height: 100%;
-    border-radius: 10px;
-    transition: width 0.6s ease;
-    background: linear-gradient(90deg, var(--success-color), var(--primary-color));
-}
-
-.window-bar {
-    background: var(--bg-tertiary);
-    border-radius: 10px;
-    height: 8px;
-    width: 120px;
-    overflow: hidden;
-    margin-left: 8px;
-}
-
-/* Profile Stats */
-#profile-stats-container {
-    background: var(--bg-card);
-    border-radius: var(--border-radius);
-    padding: 20px;
-    margin-bottom: 20px;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow);
-}
-
-#profile-stats-container h3 {
-    color: var(--primary-color);
-    margin-bottom: 16px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-#profile-stats-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-#profile-stats-list li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
-    font-size: 14px;
-    gap: 12px;
-}
-
-#profile-stats-list li i {
-    width: 20px;
-    color: var(--primary-color);
-    text-align: center;
-}
-
-.stat-value {
-    font-weight: 600;
-    color: var(--primary-color);
-    min-width: 30px;
-    text-align: right;
-}
-
-/* Splash Screen */
+/* Splash Screen - Windows 11 Style */
 #splash-screen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    background: linear-gradient(135deg, var(--win11-bg-primary), var(--win11-bg-secondary));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -733,7 +460,7 @@ main {
 
 #splash-content {
     text-align: center;
-    color: var(--text-white);
+    color: var(--win11-text-primary);
     animation: splashContentSlide 2s ease-out;
 }
 
@@ -748,12 +475,14 @@ main {
     font-weight: 600;
     margin-bottom: 8px;
     letter-spacing: 2px;
+    color: var(--win11-accent);
 }
 
 #dev-logo p {
     font-size: 14px;
     opacity: 0.8;
     font-style: italic;
+    color: var(--win11-text-secondary);
 }
 
 #game-title {
@@ -766,7 +495,7 @@ main {
     font-size: 48px;
     font-weight: 700;
     margin-bottom: 12px;
-    background: linear-gradient(45deg, #fff, #f0f0f0);
+    background: linear-gradient(45deg, var(--win11-text-primary), var(--win11-accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -777,6 +506,7 @@ main {
     font-size: 16px;
     opacity: 0.9;
     letter-spacing: 1px;
+    color: var(--win11-text-secondary);
 }
 
 #splash-loading {
@@ -787,7 +517,7 @@ main {
 .loading-bar {
     width: 200px;
     height: 4px;
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--win11-bg-tertiary);
     border-radius: 2px;
     margin: 0 auto 16px;
     overflow: hidden;
@@ -796,7 +526,7 @@ main {
 .loading-progress {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, #fff, #f0f0f0);
+    background: linear-gradient(90deg, var(--win11-accent), var(--win11-accent-hover));
     border-radius: 2px;
     animation: loadingProgress 2s ease-in-out forwards;
 }
@@ -804,6 +534,7 @@ main {
 #splash-loading p {
     font-size: 14px;
     opacity: 0.8;
+    color: var(--win11-text-secondary);
 }
 
 @keyframes splashFadeOut {
@@ -827,14 +558,14 @@ main {
     to { width: 100%; }
 }
 
-/* Main Menu */
+/* Main Menu - Windows 11 Style */
 #main-menu-screen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, var(--win11-bg-primary), var(--win11-bg-secondary));
     display: none;
     align-items: center;
     justify-content: center;
@@ -857,31 +588,30 @@ main {
     font-size: 42px;
     font-weight: 700;
     margin-bottom: 12px;
-    color: var(--text-white);
+    color: var(--win11-text-primary);
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 #menu-title p {
     font-size: 16px;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--win11-text-secondary);
     letter-spacing: 1px;
 }
 
 #menu-buttons {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
 }
 
 .menu-btn {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--border-radius);
+    background: var(--win11-bg-card);
+    border: 1px solid var(--win11-border);
+    border-radius: var(--win11-radius-large);
     padding: 18px 24px;
-    color: var(--text-white);
+    color: var(--win11-text-primary);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     gap: 16px;
@@ -890,18 +620,25 @@ main {
     text-align: left;
     position: relative;
     overflow: hidden;
+    box-shadow: var(--win11-shadow);
 }
 
 .menu-btn.primary {
-    background: rgba(255, 255, 255, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    background: var(--win11-accent);
+    border-color: var(--win11-accent-hover);
+    color: var(--win11-text-primary);
 }
 
 .menu-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--win11-bg-elevated);
+    border-color: var(--win11-border-hover);
     transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--win11-shadow-elevated);
+}
+
+.menu-btn.primary:hover {
+    background: var(--win11-accent-hover);
+    border-color: var(--win11-accent-pressed);
 }
 
 .menu-btn i {
@@ -910,20 +647,20 @@ main {
     text-align: center;
 }
 
-/* Character Creation */
+/* Character Creation - Windows 11 Style */
 #create-character-screen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, var(--win11-bg-primary), var(--win11-bg-secondary));
     display: none;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 1500;
     padding: 20px;
-    animation: fadeIn 0.5s ease-out;
+    overflow-y: auto;
 }
 
 #character-creation-content {
@@ -936,42 +673,43 @@ main {
     font-size: 32px;
     font-weight: 700;
     margin-bottom: 40px;
-    color: var(--text-white);
+    color: var(--win11-text-primary);
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 #creation-buttons {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
     margin-bottom: 40px;
 }
 
 .creation-btn {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--border-radius);
+    background: var(--win11-bg-card);
+    border: 1px solid var(--win11-border);
+    border-radius: var(--win11-radius-large);
     padding: 24px;
-    color: var(--text-white);
+    color: var(--win11-text-primary);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     text-align: left;
     position: relative;
     overflow: hidden;
+    box-shadow: var(--win11-shadow);
 }
 
 .creation-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
+    background: var(--win11-bg-elevated);
+    border-color: var(--win11-border-hover);
     transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--win11-shadow-elevated);
 }
 
 .creation-btn i {
     font-size: 28px;
     margin-bottom: 12px;
     display: block;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--win11-accent);
 }
 
 .creation-btn span {
@@ -979,32 +717,94 @@ main {
     font-weight: 600;
     display: block;
     margin-bottom: 8px;
+    color: var(--win11-text-primary);
 }
 
 .creation-btn p {
     font-size: 14px;
-    opacity: 0.8;
+    color: var(--win11-text-secondary);
     line-height: 1.4;
 }
 
-.back-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--border-radius);
-    padding: 12px 20px;
-    color: var(--text-white);
+.input-group {
+    background: var(--win11-bg-card);
+    border: 1px solid var(--win11-border);
+    border-radius: var(--win11-radius-large);
+    padding: 24px;
+    margin-bottom: 20px;
+    text-align: left;
+    box-shadow: var(--win11-shadow);
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    margin-top: 16px;
+    font-weight: 600;
+    color: var(--win11-text-primary);
+}
+
+.input-group label:first-child {
+    margin-top: 0;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--win11-border);
+    border-radius: var(--win11-radius);
+    background: var(--win11-bg-elevated);
+    color: var(--win11-text-primary);
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: var(--win11-accent);
+}
+
+.create-btn {
+    width: 100%;
+    background: var(--win11-accent);
+    color: var(--win11-text-primary);
+    border: none;
+    padding: 14px 20px;
+    border-radius: var(--win11-radius);
+    font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    margin-top: 20px;
+    transition: all 0.2s ease;
+}
+
+.create-btn:hover {
+    background: var(--win11-accent-hover);
+    transform: translateY(-1px);
+}
+
+.back-btn {
+    background: var(--win11-bg-elevated);
+    border: 1px solid var(--win11-border);
+    border-radius: var(--win11-radius-large);
+    padding: 12px 20px;
+    color: var(--win11-text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     gap: 8px;
     justify-content: center;
     font-size: 14px;
     font-weight: 500;
+    box-shadow: var(--win11-shadow);
 }
 
 .back-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--win11-bg-tertiary);
+    border-color: var(--win11-border-hover);
     transform: translateY(-1px);
 }
 
@@ -1013,14 +813,14 @@ main {
     to { opacity: 1; }
 }
 
-/* Death Screen */
+/* Death Screen - Windows 11 Style */
 #death-screen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, var(--danger-color), #C0392B);
+    background: linear-gradient(135deg, var(--win11-error), #B91E23);
     display: none;
     align-items: center;
     justify-content: center;
@@ -1038,38 +838,152 @@ main {
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 24px;
-    color: var(--text-white);
+    color: var(--win11-text-primary);
 }
 
 #obituary-container {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
-    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--win11-radius-large);
     padding: 20px;
     margin-bottom: 24px;
     max-height: 60vh;
     overflow-y: auto;
     text-align: left;
-    color: var(--text-white);
+    color: var(--win11-text-primary);
 }
 
 .rectangular-btn {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: var(--border-radius);
+    background: var(--win11-bg-card);
+    border: 1px solid var(--win11-border);
+    border-radius: var(--win11-radius-large);
     padding: 16px 24px;
     font-size: 16px;
     font-weight: 600;
-    color: var(--text-white);
+    color: var(--win11-text-primary);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     width: 100%;
+    box-shadow: var(--win11-shadow);
 }
 
 .rectangular-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--win11-bg-elevated);
+    border-color: var(--win11-border-hover);
     transform: translateY(-2px);
+    box-shadow: var(--win11-shadow-elevated);
+}
+
+/* Relationship Styles - Windows 11 Style */
+.relationship-category {
+    margin-bottom: 20px;
+    background: var(--win11-bg-card);
+    border: 1px solid var(--win11-border);
+    border-radius: var(--win11-radius-large);
+    overflow: hidden;
+    box-shadow: var(--win11-shadow);
+}
+
+.relationship-header {
+    background: var(--win11-bg-secondary);
+    color: var(--win11-text-primary);
+    padding: 16px 20px;
+    font-weight: 600;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--win11-border);
+}
+
+.relationship-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.modern-relationships-container {
+    padding: 16px;
+}
+
+.modern-relationship-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: var(--win11-bg-elevated);
+    border: 1px solid var(--win11-border);
+    border-radius: var(--win11-radius);
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+    color: var(--win11-text-primary);
+}
+
+.modern-relationship-item:hover {
+    transform: translateX(4px);
+    box-shadow: var(--win11-shadow);
+    border-color: var(--win11-border-hover);
+}
+
+.relationship-avatar {
+    font-size: 32px;
+    margin-right: 16px;
+    background: var(--win11-bg-tertiary);
+    border: 1px solid var(--win11-border);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.relationship-details {
+    flex: 1;
+}
+
+.relationship-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--win11-text-primary);
+    margin-bottom: 4px;
+}
+
+.relationship-info {
+    font-size: 13px;
+    color: var(--win11-text-secondary);
+    margin-bottom: 8px;
+}
+
+.relationship-bar {
+    background: var(--win11-bg-tertiary);
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--win11-error) 0%, var(--win11-warning) 50%, var(--win11-success) 100%);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.relationship-percentage {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--win11-text-secondary);
+}
+
+.no-relationships {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: var(--win11-text-tertiary);
+    font-style: italic;
 }
 
 /* Mobile Optimizations */
@@ -1184,29 +1098,30 @@ main {
     }
 }
 
-/* Scrollbar */
+/* Scrollbar - Windows 11 Style */
 *::-webkit-scrollbar {
-    width: 6px;
+    width: 12px;
 }
 
 *::-webkit-scrollbar-track {
-    background: var(--bg-tertiary);
-    border-radius: 3px;
+    background: var(--win11-bg-tertiary);
+    border-radius: 6px;
 }
 
 *::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: 3px;
+    background: var(--win11-border);
+    border-radius: 6px;
+    border: 2px solid var(--win11-bg-tertiary);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-    background: var(--secondary-color);
+    background: var(--win11-border-hover);
 }
 
 /* Utility Classes */
-.green { color: var(--success-color); }
-.red { color: var(--danger-color); }
-.yellow { color: var(--warning-color); }
+.green { color: var(--win11-success); }
+.red { color: var(--win11-error); }
+.yellow { color: var(--win11-warning); }
 
 /* Enhanced Touch Targets for Mobile */
 .btn, .option, .create-btn, .rectangular-btn {
@@ -1216,7 +1131,7 @@ main {
 
 /* Improved Focus States */
 .btn:focus, .option:focus, button:focus {
-    outline: 2px solid var(--primary-color);
+    outline: 2px solid var(--win11-accent);
     outline-offset: 2px;
 }
 
@@ -1231,190 +1146,22 @@ main {
     animation: pulse 1.5s ease-in-out infinite;
 }
 
-/* Menu styles */
-.menu {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #2c3e50;
-    border-radius: 10px;
-    padding: 20px;
-    width: 90%;
-    max-width: 400px;
-    z-index: 1000;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+/* Setting items */
+.setting-item {
+    margin: 12px 0;
+    padding: 8px 0;
 }
 
-/* Career interface styles - BitLife inspired */
-.career-grid {
+.setting-item label {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.special-career {
-    background: linear-gradient(135deg, #8e44ad, #9b59b6) !important;
-    color: white !important;
-    font-weight: bold;
-    border: 2px solid #f39c12;
-    animation: specialGlow 2s infinite;
-}
-
-@keyframes specialGlow {
-    0%, 100% { box-shadow: 0 0 5px #f39c12; }
-    50% { box-shadow: 0 0 20px #f39c12; }
-}
-
-.career-category h3 {
-    color: #3498db;
-    margin-bottom: 10px;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 5px;
-}
-
-.jobs-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.job-item {
-    background: #34495e;
-    border-radius: 8px;
-    padding: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border-left: 4px solid #3498db;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.job-item:hover {
-    background: #4a5f7a;
-    transform: translateX(5px);
-}
-
-.job-title {
-    font-weight: bold;
-    color: white;
-    font-size: 14px;
-}
-
-.job-salary {
-    color: #2ecc71;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.job-field {
-    color: #95a5a6;
-    font-size: 11px;
-    font-style: italic;
-}
-
-.current-job {
-    background: #27ae60;
-    border-radius: 8px;
-    padding: 15px;
-    color: white;
-}
-
-.current-job h3 {
-    color: white;
-    margin-bottom: 10px;
-}
-
-/* Music Dashboard Styles */
-.music-dashboard {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.music-stats {
-    background: #2c3e50;
-    border-radius: 8px;
-    padding: 15px;
-    border: 2px solid #8e44ad;
-}
-
-.music-stats h3 {
-    color: #8e44ad;
-    margin-bottom: 10px;
-}
-
-.music-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.music-option {
-    background: #34495e;
-    border-radius: 8px;
-    padding: 15px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-    display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 8px;
+    color: var(--win11-text-primary);
+    cursor: pointer;
 }
 
-.music-option:hover:not(.disabled) {
-    background: #4a5f7a;
-    border-color: #8e44ad;
-    transform: scale(1.05);
-}
-
-.music-option.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.music-option i {
-    font-size: 24px;
-    color: #8e44ad;
-}
-
-.music-option span {
-    color: white;
-    font-weight: bold;
-    font-size: 12px;
-}
-
-.create-artist-form, .create-record-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 10px;
-}
-
-.create-artist-form input, .create-artist-form select,
-.create-record-form input, .create-record-form select {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #bdc3c7;
-    background: #ecf0f1;
-    color: #2c3e50;
-}
-
-.artist-stats {
-    text-align: left;
-    padding: 15px;
-}
-
-.artist-stats h3, .artist-stats h4 {
-    color: #8e44ad;
-    margin-bottom: 10px;
-}
-
-.disabled {
-    opacity: 0.6;
-    cursor: not-allowed !important;
-    pointer-events: none;
+.setting-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--win11-accent);
 }

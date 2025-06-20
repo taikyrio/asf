@@ -133,8 +133,8 @@ class Person {
             created: false,
             created_at: null,
             username: null,
-            posts: [],
-            followers: 0
+            videos: [],
+            subscribers: 0
         }
     }
 }
@@ -250,32 +250,201 @@ const assignNPCEducation = (characters) => {
     }
 }
 
-const randomCharacter = () => {
-    player = new Person();
-    characters.push(player)
-    createFamily(player)
-    interfaceLoading()
-    assignNPCEducation(characters)
-}
-
+//Functions which generate player character
 const customCharacter = () => {
-    const inputName = document.getElementById('name');
-    const inputSurname = document.getElementById('surname');
-    const inputAge = document.getElementById('age')
-    const selectGender = document.getElementById('gender');
-    const selectNationality = document.getElementById('nationality');
-    const inputMoney = document.getElementById('money');
+    const name = document.getElementById("name").value;
+    const surname = document.getElementById("surname").value;
+    const age = parseInt(document.getElementById("age").value);
+    const gender = document.getElementById("gender").value;
+    const nationality = document.getElementById("nationality").value;
+    const money = parseInt(document.getElementById("money").value);
 
-    const name = inputName.value.trim() !== '' ? inputName.value.trim() : undefined;
-    const surname = inputSurname.value.trim() !== '' ? inputSurname.value.trim() : undefined;
-    const age = inputAge.value >= 0 ? parseInt(inputAge.value) : 0;
-    const gender = selectGender.value || undefined;
-    const nationality = selectNationality.value || undefined;
-    const money = parseInt(inputMoney.value) || undefined;
+    if (!name || !surname || age < 0 || age > 70 || !money || money < 0) {
+        alert("Please fill all fields correctly!");
+        return;
+    }
 
-    player = new Person(name !== undefined ? capitalize(name) : name, name !== undefined ? capitalize(surname) : name, age, gender, nationality, money);
-    characters.push(player);
-    createFamily(player);
-    interfaceLoading()
-    assignNPCEducation(characters)
-}
+    createCharacter(name, surname, age, gender, nationality, money);
+    startGame();
+};
+
+const randomCharacter = () => {
+    const genders = ["male", "female"];
+    const gender = genders[Math.floor(Math.random() * genders.length)];
+    const nationality = countryRandomizer();
+    const age = 0;
+    const money = Math.floor(Math.random() * 10000) + 1000;
+
+    // Get random name based on nationality and gender
+    const nameData = names[languageQuery(nationality)];
+    const nameArray = nameData[gender];
+    const surnameArray = nameData.surnames;
+
+    const firstName = nameArray[Math.floor(Math.random() * nameArray.length)];
+    const lastName = surnameArray[Math.floor(Math.random() * surnameArray.length)];
+
+    createCharacter(firstName, lastName, age, gender, nationality, money);
+    startGame();
+};
+
+const createCharacter = (name, surname, age, gender, nationality, money) => {
+    try {
+        // Clear any existing game data
+        if (typeof characters !== 'undefined') {
+            characters.length = 0;
+        }
+
+        window.player = new Person(name, surname, age, gender, nationality);
+        window.player.money.total = money;
+
+        // Add player to characters array
+        if (typeof characters !== 'undefined') {
+            characters.push(window.player);
+            window.player.characterIndex = 0;
+        }
+
+        // Initialize game state
+        if (typeof window.gameState !== 'undefined') {
+            window.gameState.setState({
+                year: Math.round(Math.random() * 20) + 2000,
+                characters: characters || [window.player],
+                player: { characterIndex: 0 }
+            });
+        }
+
+        // Set initial year if not defined
+        if (typeof window.year === 'undefined') {
+            window.year = Math.round(Math.random() * 20) + 2000;
+        }
+
+        // Generate family relationships
+        generateFamily(window.player);
+
+        // Set initial UI
+        const textContainer = document.getElementById('text-container');
+        if (textContainer) {
+            textContainer.innerHTML = `<p>Welcome to your new life, ${name} ${surname}!</p>`;
+        }
+
+        // Update money display
+        if (typeof moneyViewer === 'function') {
+            moneyViewer();
+        }
+
+        // Update career button state
+        if (typeof updateCareerButtonState === 'function') {
+            updateCareerButtonState();
+        }
+    } catch (error) {
+        console.error("Error creating character:", error);
+    }
+};
+
+const generateFamily = (person) => {
+    try {
+        // Generate parents
+        const fatherNationality = person.nationality;
+        const motherNationality = person.nationality;
+        const fatherAge = person.age + (Math.floor(Math.random() * 20) + 20);
+        const motherAge = person.age + (Math.floor(Math.random() * 20) + 20);
+
+        // Safe name generation with fallbacks
+        let fatherName = "John";
+        let motherName = "Jane";
+        let surname = person.surname || "Smith";
+
+        try {
+            const language = languageQuery(fatherNationality);
+            if (typeof names !== 'undefined' && names[language]) {
+                const nameData = names[language];
+                if (nameData.male && nameData.male.length > 0) {
+                    fatherName = nameData.male[Math.floor(Math.random() * nameData.male.length)];
+                }
+                if (nameData.female && nameData.female.length > 0) {
+                    motherName = nameData.female[Math.floor(Math.random() * nameData.female.length)];
+                }
+                if (nameData.surnames && nameData.surnames.length > 0) {
+                    surname = nameData.surnames[Math.floor(Math.random() * nameData.surnames.length)];
+                }
+            }
+        } catch (nameError) {
+            console.warn("Error generating names, using defaults:", nameError);
+        }
+
+        const father = new Person(
+            fatherName,
+            surname,
+            fatherAge,
+            "male",
+            fatherNationality
+        );
+
+        const mother = new Person(
+            motherName,
+            person.surname,
+            motherAge,
+            "female",
+            motherNationality
+        );
+
+        // Set up relationships
+        person.relationships.parents.push(father, mother);
+        father.relationships.offspring.push(person);
+        mother.relationships.offspring.push(person);
+        father.relationships.partner.push(mother);
+        mother.relationships.partner.push(father);
+
+        // Add to characters array
+        if (typeof characters !== 'undefined') {
+            characters.push(father, mother);
+        }
+
+        // Generate potential siblings
+        if (Math.random() < 0.4) {
+            const siblingGender = Math.random() < 0.5 ? "male" : "female";
+            const siblingAge = person.age + randomStat(-5, 5);
+            
+            let siblingName = siblingGender === "male" ? "Alex" : "Sam";
+            
+            if (typeof names !== 'undefined' && names[languageQuery(person.nationality)]) {
+                const nameData = names[languageQuery(person.nationality)];
+                if (nameData[siblingGender] && nameData[siblingGender].length > 0) {
+                    siblingName = nameData[siblingGender][Math.floor(Math.random() * nameData[siblingGender].length)];
+                }
+            }
+
+            const sibling = new Person(
+                siblingName,
+                person.surname,
+                Math.max(0, siblingAge),
+                siblingGender,
+                person.nationality
+            );
+
+            person.relationships.siblings.push(sibling);
+            sibling.relationships.siblings.push(person);
+            sibling.relationships.parents.push(father, mother);
+            father.relationships.offspring.push(sibling);
+            mother.relationships.offspring.push(sibling);
+
+            if (typeof characters !== 'undefined') {
+                characters.push(sibling);
+            }
+        }
+    } catch (error) {
+        console.error("Error generating family:", error);
+        // Create minimal family structure as fallback
+        const father = new Person("John", person.surname || "Smith", person.age + 25, "male", person.nationality);
+        const mother = new Person("Jane", person.surname || "Smith", person.age + 23, "female", person.nationality);
+        
+        person.relationships.parents.push(father, mother);
+        father.relationships.offspring.push(person);
+        mother.relationships.offspring.push(person);
+        father.relationships.partner.push(mother);
+        mother.relationships.partner.push(father);
+
+        if (typeof characters !== 'undefined') {
+            characters.push(father, mother);
+        }
+    }
+};

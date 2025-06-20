@@ -6,24 +6,51 @@ Object.assign(menu, {
         menuTemplate.style.display = 'block';
         menuTitle.innerText = 'Relationships';
         menuBody.innerHTML = `
-        <ul>
-            <li onclick="menu.parents()" class="option">Parents</li>
-            <li onclick="menu.siblings()" class="option">Siblings</li>
-            <li onclick="menu.partner()" class="option">Partner</li>
-            <li onclick="menu.friends()" class="option">Friends</li>
-            <li onclick="menu.offspring()" class="option">Children</li>
-        </ul>
+        <div class="relationships-grid">
+            <div onclick="menu.parents()" class="relationship-card">
+                <div class="card-icon">👨‍👩‍👧‍👦</div>
+                <div class="card-title">Parents</div>
+                <div class="card-count">${player.relationships.parents.length}</div>
+            </div>
+            <div onclick="menu.siblings()" class="relationship-card">
+                <div class="card-icon">👫</div>
+                <div class="card-title">Siblings</div>
+                <div class="card-count">${player.relationships.siblings.length}</div>
+            </div>
+            <div onclick="menu.partner()" class="relationship-card">
+                <div class="card-icon">💕</div>
+                <div class="card-title">Partner</div>
+                <div class="card-count">${player.relationships.partner.length}</div>
+            </div>
+            <div onclick="menu.friends()" class="relationship-card">
+                <div class="card-icon">👥</div>
+                <div class="card-title">Friends</div>
+                <div class="card-count">${player.relationships.friends.length}</div>
+            </div>
+            <div onclick="menu.offspring()" class="relationship-card">
+                <div class="card-icon">👶</div>
+                <div class="card-title">Children</div>
+                <div class="card-count">${player.relationships.offspring.length}</div>
+            </div>
+        </div>
         `;
     },
 
     parents() {
         menuTitle.innerText = 'Parents';
         menuBody.innerHTML = `
-        <div class="relationships-container">
+        <div class="modern-relationships-container">
             ${player.relationships.parents.map(parent => `
-                <div class="relationship-item">
-                    <span class="yellow">${parent.fullName}</span> (${parent.gender}, ${parent.age} years old)
-                    <br>Relationship: ${parent.stats.relationWithPlayer || 50}%
+                <div class="modern-relationship-item">
+                    <div class="relationship-avatar">${parent.gender === 'male' ? '👨' : '👩'}</div>
+                    <div class="relationship-details">
+                        <div class="relationship-name">${parent.fullName}</div>
+                        <div class="relationship-info">${parent.age} years old</div>
+                        <div class="relationship-bar">
+                            <div class="bar-fill" style="width: ${parent.stats.relationWithPlayer || 50}%"></div>
+                        </div>
+                        <div class="relationship-percentage">${parent.stats.relationWithPlayer || 50}%</div>
+                    </div>
                 </div>
             `).join('')}
         </div>
@@ -47,13 +74,20 @@ Object.assign(menu, {
     partner() {
         menuTitle.innerText = 'Partner';
         menuBody.innerHTML = `
-        <div class="relationships-container">
+        <div class="modern-relationships-container">
             ${player.relationships.partner.length > 0 ? player.relationships.partner.map(partner => `
-                <div class="relationship-item">
-                    <span class="yellow">${partner.fullName}</span> (${partner.gender}, ${partner.age} years old)
-                    <br>Relationship: ${partner.stats.relationWithPlayer || 50}%
+                <div class="modern-relationship-item">
+                    <div class="relationship-avatar">${partner.gender === 'male' ? '👨' : '👩'}</div>
+                    <div class="relationship-details">
+                        <div class="relationship-name">${partner.fullName}</div>
+                        <div class="relationship-info">${partner.age} years old</div>
+                        <div class="relationship-bar">
+                            <div class="bar-fill" style="width: ${partner.stats.relationWithPlayer || 50}%"></div>
+                        </div>
+                        <div class="relationship-percentage">${partner.stats.relationWithPlayer || 50}%</div>
+                    </div>
                 </div>
-            `).join('') : '<p>Single.</p>'}
+            `).join('') : '<div class="no-relationships">💔 Single</div>'}
         </div>
         `;
     },

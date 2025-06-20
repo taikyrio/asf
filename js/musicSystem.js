@@ -11,7 +11,9 @@ class MusicSystem {
         try {
             if (this.isInitialized) return;
 
-            this.backgroundMusic = new Audio('attached_assets/New Composition #336_1750284826079.mp3');
+            // Use the uploaded background music file
+            this.backgroundMusic = new Audio();
+            this.backgroundMusic.src = 'attached_assets/New Composition #336_1750433612688.mp3';
             
             // Set up event listeners
             this.backgroundMusic.addEventListener('error', (e) => {
