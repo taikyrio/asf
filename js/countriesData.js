@@ -1,8 +1,7 @@
 "use strict";
 
-// Only declare if not already defined
-if (typeof window.countriesData === 'undefined') {
-    window.countriesData = [
+// Declare countriesData globally
+const countriesData = [
         {
             country: 'United States', nationality: 'american', language: 'english', laws: {
                 abort: true,
@@ -396,7 +395,9 @@ if (typeof window.countriesData === 'undefined') {
             }
         }
     ];
-}
+
+// Make it available globally
+window.countriesData = countriesData;
 
 const names = {
     spanish: {
@@ -497,15 +498,15 @@ const surnames = {
     armenian: ['Grigoryan', 'Sargsyan', 'Harutyunyan'],
     ukrainian: ['Bondarenko', 'Kovalenko', 'Boiko', 'Tkachenko', 'Kravchenko', 'Kovalchuk'],
     chinese: ['Wang', 'Li', 'Zhang', 'Liu']
-};
+}
 
 const popularYoutubers = [
-    { user: 'Sr Bestia', subscribers: 190000000 },
-    { user: 'Piudipai', subscribers: 111000000 },
-    { user: 'ORichMC', subscribers: 10000000 },
-    { user: 'BBE', subscribers: 92000000 },
-    { user: 'Piernafloo', subscribers: 52000000 },
-    { user: 'PlayGeorge', subscribers: 90000000 },
-    { user: 'Rincon de Jose', subscribers: 46000000 },
-    { user: 'Fast', subscribers: 58200000 }
+    "MrBeast", "PewDiePie", "Dude Perfect", "Markiplier", "VanossGaming",
+    "Jacksepticeye", "DanTDM", "PopularMMOs", "GameGrumps", "Ninja"
 ];
+
+// Export for global use
+if (typeof window !== 'undefined') {
+    window.names = names;
+    window.popularYoutubers = popularYoutubers;
+}

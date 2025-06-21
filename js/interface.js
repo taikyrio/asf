@@ -8,12 +8,10 @@ let options = document.getElementsByClassName("option");
 
 let textContainer = document.getElementById("text-container");
 
-let year = Math.round(Math.random() * 20) + 2000;
-
 //this is when you customize your character
 const updateCareerButtonState = () => {
     const careerButton = document.getElementById("career-button");
-    if (careerButton && player) {
+    if (careerButton && player && typeof player.age === "number") {
         if (player.age < 18) {
             careerButton.classList.add("disabled");
             careerButton.title = "Career options unlock at age 18";
@@ -157,7 +155,7 @@ const newLife = () => {
     mainMenu.style.display = "flex";
 };
 
-const startGame = () => {
+const startGameInterface = () => {
     const mainMenu = document.getElementById("main-menu-screen");
     const gameScreen = document.querySelector("main");
     const navbar = document.getElementById("navbar");
@@ -169,9 +167,11 @@ const startGame = () => {
 
 const deathScreen = () => {
     const ageBtnContainer = document.getElementById("age-btn-container");
-    ageBtnContainer.innerHTML = `
-    <button id="age-btn" onclick="annualChanges()">Age</button>
-    `;
+    if (ageBtnContainer) {
+        ageBtnContainer.innerHTML = `
+        <button id="age-btn" onclick="annualChangesInterface()">Age</button>
+        `;
+    }
 
     const obituaryContainer = document.getElementById("obituary-container");
 
@@ -208,7 +208,7 @@ const deathScreen = () => {
     document.getElementById("death-screen").style.display = "block";
 };
 
-const annualChanges = () => {
+const annualChangesInterface = () => {
     try {
         // Check if required global variables exist
         if (typeof player === "undefined" || !player) {
@@ -228,7 +228,9 @@ const annualChanges = () => {
 
         // Simple aging system if gameState is not available
         if (typeof window.gameState === "undefined" || !window.gameState) {
-            console.warn("Using fallback aging system - gameState not available");
+            console.warn(
+                "Using fallback aging system - gameState not available",
+            );
 
             // Basic aging
             player.age++;
@@ -250,8 +252,13 @@ const annualChanges = () => {
 
             // Update finances if available
             try {
-                if (player.money && typeof player.money.income === "number" && typeof player.money.expenses === "number") {
-                    player.money.total += player.money.income - player.money.expenses;
+                if (
+                    player.money &&
+                    typeof player.money.income === "number" &&
+                    typeof player.money.expenses === "number"
+                ) {
+                    player.money.total +=
+                        player.money.income - player.money.expenses;
                 }
             } catch (e) {
                 console.error("Error updating finances:", e);
@@ -280,13 +287,21 @@ const annualChanges = () => {
 
         // Initialize game state if it's empty or missing required data
         if (!state.characters || state.characters.length === 0) {
-            console.warn("Game state characters empty, initializing with current game data");
+            console.warn(
+                "Game state characters empty, initializing with current game data",
+            );
 
             // Initialize with global characters array if available
-            if (typeof characters !== 'undefined' && Array.isArray(characters) && characters.length > 0) {
+            if (
+                typeof characters !== "undefined" &&
+                Array.isArray(characters) &&
+                characters.length > 0
+            ) {
                 // Ensure player has characterIndex if not already set
-                if (player && typeof player.characterIndex === 'undefined') {
-                    player.characterIndex = characters.findIndex(char => char === player);
+                if (player && typeof player.characterIndex === "undefined") {
+                    player.characterIndex = characters.findIndex(
+                        (char) => char === player,
+                    );
                     if (player.characterIndex === -1) {
                         player.characterIndex = 0; // Default to first character
                     }
@@ -295,14 +310,21 @@ const annualChanges = () => {
                 const initialState = {
                     year: year || state.year,
                     characters: [...characters],
-                    player: player ? { characterIndex: player.characterIndex } : null
+                    player: player
+                        ? { characterIndex: player.characterIndex }
+                        : null,
                 };
 
                 window.gameState.setState(initialState);
                 state = window.gameState.getState();
-                console.log("Game state initialized with player index:", player ? player.characterIndex : 'none');
+                console.log(
+                    "Game state initialized with player index:",
+                    player ? player.characterIndex : "none",
+                );
             } else {
-                throw new Error("No character data available to initialize game state");
+                throw new Error(
+                    "No character data available to initialize game state",
+                );
             }
         }
 
@@ -345,191 +367,98 @@ const annualChanges = () => {
         }
 
         // Make sure the player is at the correct index in state.characters
-        if (state.characters.length > 0) {
-            // Update the player reference in the characters array
-            const playerIndex = player.characterIndex || 0;
-            if (playerIndex < state.characters.length) {
-                state.characters[playerIndex] = player;
-            }
+        if (
+            currentPlayer.characterIndex !== undefined &&
+            state.characters[currentPlayer.characterIndex]
+        ) {
+            // Update the player object with the state data
+            Object.assign(
+                currentPlayer,
+                state.characters[currentPlayer.characterIndex],
+            );
         }
 
-        console.log("Using global player object directly")
+        // Update global year
+        year = state.year;
 
-        // Handle pregnancy for all characters
-        if (typeof pregnancyHandler === "function") {
-            state.characters.forEach((person) => {
-                try {
-                    if (person && person.alive) {
-                        pregnancyHandler(person);
-                    }
-                } catch (e) {
-                    console.error("Error in pregnancy handler:", e);
-                }
-            });
+        // Update text container with new year
+        textContainer.innerHTML += `
+            <p><span class="yellow">${year} - ${currentPlayer.age} years old</span></p>
+        `;
+
+        // Handle money changes
+        if (
+            currentPlayer.money &&
+            typeof currentPlayer.money.income === "number" &&
+            typeof currentPlayer.money.expenses === "number"
+        ) {
+            currentPlayer.money.total +=
+                currentPlayer.money.income - currentPlayer.money.expenses;
         }
 
-        // Update text container
-        try {
-            textContainer.innerHTML += `
-                <p><span class="yellow">${state.year} - ${currentPlayer.age} years old</span></p>
-            `;
-        } catch (e) {
-            console.error("Error updating text container:", e);
+        // Handle education
+        if (typeof studyingProcess === "function") {
+            studyingProcess(textContainer);
         }
 
-        // Handle deaths with error checking
-        if (typeof randomDeath === "function") {
-            state.characters.forEach((person) => {
-                try {
-                    if (person) {
-                        randomDeath(person);
-                    }
-                } catch (e) {
-                    console.error("Error in random death handler:", e);
-                }
-            });
+        // Handle stats changes
+        if (typeof statsBuffer === "function") {
+            statsBuffer();
         }
 
-        // Update UI elements with error checking
-        try {
-            if (typeof lifeStageDisplayer === "function") {
-                lifeStageDisplayer();
-            }
-            if (typeof specificEvents === "function") {
-                specificEvents();
-            }
-        } catch (e) {
-            console.error("Error updating UI elements:", e);
+        // Handle job performance
+        if (typeof jobPerformanceHandler === "function") {
+            jobPerformanceHandler();
         }
 
-        // Random world events with error checking
-        try {
-            if (typeof worldEventsAmount !== "undefined" && typeof worldEventsMethodArr !== "undefined") {
-                if (Math.floor(Math.random() * 10) === 5) {
-                    const eventIndex = Math.floor(Math.random() * worldEventsAmount);
-                    const eventMethod = worldEventsMethodArr[eventIndex];
-                    if (Array.isArray(eventMethod) && typeof eventMethod[1] === "function") {
-                        textContainer.innerHTML += `<p>${eventMethod[1]()}</p>`;
-                    }
-                }
-            }
-        } catch (e) {
-            console.error("Error handling world events:", e);
+        // Handle prison
+        if (typeof prisonHandler === "function") {
+            prisonHandler(currentPlayer);
         }
 
-        // Update player's finances with validation
-        try {
-            if (currentPlayer.money && 
-                typeof currentPlayer.money.income === "number" &&
-                typeof currentPlayer.money.expenses === "number") {
-                currentPlayer.money.total += currentPlayer.money.income - currentPlayer.money.expenses;
-            } else {
-                console.warn("Invalid money values:", currentPlayer.money);
-            }
-        } catch (e) {
-            console.error("Error updating finances:", e);
+        // Handle specific age events
+        if (typeof specificEvents === "function") {
+            specificEvents();
         }
 
-        // Handle job performance with validation
-        try {
-            if (currentPlayer.job && currentPlayer.job !== "none") {
-                const random = Math.round(Math.random());
-                if (random === 0) {
-                    currentPlayer.job.performance += Math.floor(Math.random() * 5);
-                } else {
-                    currentPlayer.job.performance -= Math.floor(Math.random() * 5);
-                }
-            }
-        } catch (e) {
-            console.error("Error handling job performance:", e);
+        // Reset actions
+        if (typeof resetAvailableActions === "function") {
+            resetAvailableActions();
         }
 
-        // Handle music career with error checking
-        try {
-            if (currentPlayer.musicCareer && currentPlayer.musicCareer.active && typeof handleMusicCareerProgression === "function") {
-                handleMusicCareerProgression();
-            }
-        } catch (e) {
-            console.error("Error in music career progression:", e);
+        // Update UI
+        if (typeof moneyViewer === "function") {
+            moneyViewer();
         }
 
-        // Handle education and careers with error checking
-        try {
-            if (typeof studyingProcess === "function") {
-                studyingProcess(textContainer);
-            }
-            if (currentPlayer.job && currentPlayer.job !== "none" && typeof currentPlayer.job.buff === "function") {
-                currentPlayer.job.buff(currentPlayer);
-            }
-            if (currentPlayer.currentCareer && 
-                currentPlayer.currentCareer.studying && 
-                typeof currentPlayer.currentCareer.buff === "function") {
-                currentPlayer.currentCareer.buff(currentPlayer);
-            }
-        } catch (e) {
-            console.error("Error handling education/careers:", e);
+        if (typeof scrolldown === "function") {
+            scrolldown(textContainer);
         }
 
-        // Update stats with error checking
-        try {
-            if (typeof statsChanges === "function") {
-                statsChanges();
-            }
-            if (typeof statsBuffer === "function") {
-                statsBuffer();
-            }
-            if (typeof statsLimit === "function") {
-                statsLimit(currentPlayer);
-            }
-            if (typeof handleStatBars === "function") {
-                handleStatBars(currentPlayer, true);
-            }
-            if (typeof skillLeveler === "function") {
-                skillLeveler();
-            }
-        } catch (e) {
-            console.error("Error updating stats:", e);
-        }
+        // Update career button state
+        updateCareerButtonState();
 
-        // Update UI with error checking
-        try {
-            if (typeof scrolldown === "function") {
-                scrolldown(textContainer);
-            }
-            if (typeof moneyViewer === "function") {
-                moneyViewer();
-            }
-            if (typeof resetAvaibleActions === "function") {
-                resetAvaibleActions();
-            }
-            if (typeof randomizeHouseStats === "function") {
-                randomizeHouseStats();
-            }
-            if (typeof prisonHandler === "function") {
-                prisonHandler(currentPlayer);
-            }
-            if (typeof eventsHandler === "function") {
-                eventsHandler();
-            }
-            updateCareerButtonState();
-        } catch (e) {
-            console.error("Error updating UI:", e);
-        }
-
-        // Save game after annual changes
-        try {
-            if (typeof SaveSystem !== "undefined" && SaveSystem.saveGame) {
-                SaveSystem.saveGame();
-            }
-        } catch (e) {
-            console.error("Error saving game:", e);
+        // Limit stats
+        if (typeof statsLimit === "function") {
+            statsLimit(currentPlayer);
         }
     } catch (error) {
         console.error("Error in annual changes:", error);
-        console.error("Error message:", error.message);
-        console.error("Error stack:", error.stack);
-        if (typeof EnhancedUI !== "undefined" && EnhancedUI.showNotification) {
-            EnhancedUI.showNotification(`Error: ${error.message}`, "error");
+
+        // Fallback to basic aging if game state fails
+        if (player) {
+            player.age++;
+            year++;
+
+            if (textContainer) {
+                textContainer.innerHTML += `
+                    <p><span class="yellow">${year} - ${player.age} years old</span></p>
+                `;
+            }
+
+            if (typeof moneyViewer === "function") {
+                moneyViewer();
+            }
         }
     }
 };
@@ -599,53 +528,20 @@ closeMenu.addEventListener("click", (e) => {
     menuTemplate.style.display = "none";
 });
 
+// interfaceLoading function
 const interfaceLoading = () => {
     try {
-        if (typeof window.player === 'undefined' || !window.player) {
-            console.error("Player not initialized");
-            return;
-        }
-
-        // Call functions with error handling
-        if (typeof handleStatBars === 'function') {
-            handleStatBars(window.player, true);
-        }
-        if (typeof lifeStageDisplayer === 'function') {
-            lifeStageDisplayer();
-        }
-        if (typeof moneyViewer === 'function') {
+        // Update money display
+        if (typeof moneyViewer === "function") {
             moneyViewer();
         }
-        if (typeof jobAssigner === 'function' && typeof characters !== 'undefined') {
-            jobAssigner(characters);
-        }
-        if (typeof firstMessage === 'function') {
-            firstMessage();
-        }
 
-        // Hide all menu screens
-        const screens = ['splash-screen', 'main-menu-screen', 'create-character-screen'];
-        screens.forEach(screenId => {
-            const screen = document.getElementById(screenId);
-            if (screen) screen.style.display = 'none';
-        });
+        // Update career button
+        updateCareerButtonState();
 
-        const bars = document.getElementsByClassName('bar-progress');
-        for (let bar of bars) {
-            bar.style.animationName = 'animation-bar';
-            bar.style.transition = 'all ease 0.3s';
-        }
-
-        // Update career button state and initialize menu options
-        setTimeout(() => {
-            if (typeof updateCareerButtonState === 'function') {
-                updateCareerButtonState();
-            }
-            if (typeof initializeMenuOptions === 'function') {
-                initializeMenuOptions();
-            }
-        }, 100);
+        // Initialize any UI elements
+        console.log("Interface loaded successfully");
     } catch (error) {
-        console.error("Error in interfaceLoading:", error);
+        console.error("Error loading interface:", error);
     }
-}
+};
